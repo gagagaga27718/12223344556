@@ -127,6 +127,32 @@
   }
   SL.classifyTopic = classifyTopic;
 
+  /* suggest the best unit + topic in a course for free text (English keywords + Chinese topic-name bigrams) */
+  SL.suggestTopic = function (sid, text) {
+    var s = SL.subject(sid); if (!s || !text) return null;
+    var raw = String(text), tk = {}; tokens(text).forEach(function (w) { tk[w] = 1; });
+    var docs = [];
+    s.units.forEach(function (u) {
+      topicTokens(u.id).forEach(function (set, i) {
+        var zh = (u.topics[i].zh || '').replace(/[^\u4e00-\u9fff]/g, ''), bg = {};
+        for (var k = 0; k + 2 <= zh.length; k++) bg[zh.slice(k, k + 2)] = 1;
+        docs.push({ u: u.id, tp: i, en: set, zh: bg });
+      });
+    });
+    // inverse document frequency: words shared by many topics (cell, function, 细胞) count little
+    var df = {};
+    docs.forEach(function (d) { Object.keys(d.en).forEach(function (w) { df['e' + w] = (df['e' + w] || 0) + 1; }); Object.keys(d.zh).forEach(function (w) { df['z' + w] = (df['z' + w] || 0) + 1; }); });
+    var best = null;
+    docs.forEach(function (d) {
+      var sc = 0;
+      Object.keys(tk).forEach(function (w) { if (d.en[w]) sc += 3 / df['e' + w]; });
+      Object.keys(d.zh).forEach(function (w) { if (raw.indexOf(w) !== -1) sc += 3 / df['z' + w]; });
+      if (!best || sc > best.score) best = { u: d.u, tp: d.tp, score: Math.round(sc * 100) / 100 };
+    });
+    return best && best.score >= 1 ? best : null;
+  };
+
+
   /* ---------- difficulty estimate ---------- */
   function estimateDifficulty(q) {
     if (q.t === 'frq' || q.t === 'draw') return 4;
@@ -158,7 +184,7 @@
       tag: raw.t || 'concept',
       type: raw.t === 'frq' ? 'frq' : raw.t === 'draw' ? 'draw' : 'mcq',
       q: raw.q, o: raw.o, a: raw.a == null ? 0 : raw.a, e: raw.e, svg: raw.svg,
-      points: raw.points, rubric: raw.rubric, refSvg: raw.refSvg,
+      points: raw.points, rubric: raw.rubric, refSvg: raw.refSvg, img: raw.img, myAns: raw.myAns,
       src: meta.src || 'bank', createdAt: raw.createdAt || meta.createdAt || 0,
       gen: meta.gen
     };
@@ -196,7 +222,7 @@
     return (SL.store.packs || []).map(function (raw) {
       var s = SL.subjectOfUnit(raw.unit || raw.u);
       if (!s) return null;
-      var n = normalize(raw, { s: s.id, u: raw.unit || raw.u, src: raw.src === 'ai' ? 'ai' : 'pack', createdAt: raw.createdAt });
+      var n = normalize(raw, { s: s.id, u: raw.unit || raw.u, src: raw.src === 'ai' || raw.src === 'mine' ? raw.src : 'pack', createdAt: raw.createdAt });
       if (n) BYID[n.id] = BYID[n.id] || n;
       return n;
     }).filter(Boolean);

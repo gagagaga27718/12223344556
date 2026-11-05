@@ -54,7 +54,8 @@
       notes: { geo: '', bio: '', precalc: '' },
       packs: [],           // imported / AI-approved question objects
       cards: { custom: [], srs: {} },
-      kb: { notes: {}, srs: {} },        // knowledge base: per-topic notes + recall review schedule
+      kb: { notes: {}, srs: {} },
+      focus: [],                         // topics to emphasise in daily practice (from entered mistakes)        // knowledge base: per-topic notes + recall review schedule
       planner: { exams: {}, dailyGoal: 20, tasks: [] },
       exams: [],
       sessions: [],

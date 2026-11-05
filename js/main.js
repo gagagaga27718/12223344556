@@ -30,6 +30,7 @@
     x: ic('<path d="M6 6l12 12M18 6 6 18"/>'),
     flask: ic('<path d="M9 3h6M10 3v6L4 19a1.5 1.5 0 0 0 1.3 2h13.4A1.5 1.5 0 0 0 20 19l-6-10V3"/>'),
     sigma: ic('<path d="M18 4H6l6 8-6 8h12"/>'),
+    camera: ic('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>'),
     more: ic('<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>')
   };
   var I = SL.ICON;
@@ -44,6 +45,7 @@
       { href: '#/practice', icon: 'target', zh: '练习', en: 'Practice', match: /^\/(practice|quiz|results)/ },
       { href: '#/review', icon: 'repeat', zh: '今日复习', en: 'Review', match: /^\/review/, badge: dueN || '' },
       { href: '#/mistakes', icon: 'alert', zh: '错题本', en: 'Mistakes', match: /^\/mistakes/ },
+      { href: '#/capture', icon: 'camera', zh: '录入错题', en: 'Add a mistake', match: /^\/capture/ },
       { href: '#/exam', icon: 'clock', zh: '模拟考试', en: 'Mock exams', match: /^\/exam/ },
       { href: '#/tutor', icon: 'bot', zh: 'AI Tutor', en: 'AI Tutor', match: /^\/tutor/ },
       { group: L('课程', 'Courses') }

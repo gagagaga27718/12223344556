@@ -36,6 +36,7 @@
       '</div><div class="row mt12">' +
       '<button class="btn primary" data-act="mistakeRetry"' + (list.filter(function (x) { return !x.mastered; }).length ? '' : ' disabled') + '>' + esc(L('重练筛选出的错题', 'Retry filtered mistakes')) + ' (' + list.filter(function (x) { return !x.mastered; }).length + ')</button>' +
       '<button class="btn" data-act="mistakeRetry" data-x3="1"' + (list.filter(function (x) { return !x.mastered; }).length ? '' : ' disabled') + '>' + esc(L('强化练习 ×3', 'Intensive ×3')) + '</button>' +
+      '<a class="btn" href="#/capture?new=1">' + I.camera + esc(L('录入错题（拍照/输入）', 'Add a mistake (photo / text)')) + '</a>' +
       '<button class="btn ghost" data-act="mistakeExport"' + (all.length ? '' : ' disabled') + '>' + esc(L('导出 JSON', 'Export JSON')) + '</button></div></div>';
 
     if (!list.length) {
@@ -50,7 +51,7 @@
           '<span class="chip bad">' + esc(L('错 ' + mk.count + ' 次', 'Missed ×' + mk.count)) + '</span>' + (mk.mastered ? '<span class="chip good">' + esc(L('已掌握', 'Mastered')) + '</span>' : mk.rightStreak ? '<span class="chip warn">' + esc(L('已连对 ' + mk.rightStreak + '/3', mk.rightStreak + '/3 right')) + '</span>' : '') +
           '<span class="xs faint">' + esc(L('最近出错 ', 'Last missed ')) + esc(ui.relTime(mk.last)) + '</span></div>' +
           '<div class="small bold">' + esc(t(q.q)) + '</div></div></div></summary>' +
-          '<div class="mt12">' + (q.svg ? '<div class="q-figure">' + q.svg + '</div>' : '') +
+          '<div class="mt12">' + (q.svg ? '<div class="q-figure">' + q.svg + '</div>' : '') + (q.img ? SL.photoHtml(q.img) : '') +
           (q.o ? '<div class="stack" style="gap:6px">' + q.o.map(function (o, i) {
             var isRight = i === q.a;
             var picked = mk.wrongAnswers.some(function (w) { return w.a === t(o) || w.a === o.en || w.a === o.zh; });

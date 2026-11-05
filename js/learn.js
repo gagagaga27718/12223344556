@@ -96,7 +96,7 @@
 
   /* ---------- mistakes ---------- */
   function snapshot(q) {
-    return { id: q.id, s: q.s, u: q.u, tp: q.tp, type: q.type, tag: q.tag, d: q.d, q: q.q, o: q.o, a: q.a, e: q.e, svg: q.svg, points: q.points, rubric: q.rubric, refSvg: q.refSvg, src: q.src };
+    return { id: q.id, s: q.s, u: q.u, tp: q.tp, type: q.type, tag: q.tag, d: q.d, q: q.q, o: q.o, a: q.a, e: q.e, svg: q.svg, img: q.img, points: q.points, rubric: q.rubric, refSvg: q.refSvg, src: q.src };
   }
   function addMistakeRaw(q, myAns, now) {
     var m = SL.store.mistakes[q.id];
@@ -253,6 +253,7 @@
       var focus = sess.adapt.focus; // topic needing remediation
       var best = null, bestScore = -1e9;
       var dueSet = {}; SL.dueTopics().forEach(function (d) { dueSet[d.key] = 1; });
+      var focusNow = {}; SL.activeFocus().forEach(function (f) { focusNow[f.key] = 1; });
       pool.forEach(function (q) {
         if (used[q.id]) return;
         var key = SL.topicKey(q.u, q.tp);
@@ -263,6 +264,8 @@
         if (dueSet[key]) score += 0.4;
         if (focus && key === focus) score += 2.5;
         if (sess.focusTopics && sess.focusTopics.indexOf(key) !== -1) score += 2;
+        if (focusNow[key]) score += 1.5;               // topics from mistakes the student entered
+        if (q.src === 'ai' || q.src === 'mine') score += 0.3;
         if (recentKeys.indexOf(key) !== -1 && key !== focus) score -= 0.5;
         if (m != null && m >= 85 && q.d <= 2) score -= 1.5;     // skip easy items on mastered topics
         if (q.type !== 'mcq' && target < 4) score -= 1.2;      // FRQ/drawing only once the student is ready
@@ -369,6 +372,20 @@
     return SL.checkAchievements();
   };
 
+  /* ---------- focus topics (from mistakes the student entered) ---------- */
+  SL.addFocus = function (key, days, src) {
+    var st = SL.store; if (!Array.isArray(st.focus)) st.focus = [];
+    var until = SL.startOfDay() + (days || 7) * DAY;
+    var f = st.focus.filter(function (x) { return x.key === key; })[0];
+    if (f) { f.until = Math.max(f.until, until); f.n = (f.n || 1) + 1; }
+    else st.focus.push({ key: key, until: until, since: Date.now(), n: 1, src: src || '' });
+    SL.save();
+  };
+  SL.activeFocus = function () {
+    var now = Date.now();
+    return (Array.isArray(SL.store.focus) ? SL.store.focus : []).filter(function (f) { return f.until > now; });
+  };
+
   /* ---------- planner ---------- */
   SL.plannerToday = function () {
     var pl = SL.store.planner, today = SL.dayKey(), now = Date.now();
@@ -382,6 +399,8 @@
     var dueT = SL.dueTopics(now), dueM = SL.dueMistakes(now);
     if (dueT.length) auto.push({ id: 'auto-review', auto: true, text: SL.L('复习到期的 ' + dueT.length + ' 个知识点', 'Review ' + dueT.length + ' due topics'), done: false, href: '#/review' });
     if (dueM.length) auto.push({ id: 'auto-mistakes', auto: true, text: SL.L('重练 ' + dueM.length + ' 道到期错题', 'Retry ' + dueM.length + ' due mistakes'), done: false, href: '#/review' });
+    var foc = SL.activeFocus();
+    if (foc.length) auto.push({ id: 'auto-focus', auto: true, text: SL.L('错题专练：' + foc.slice(0, 3).map(function (f) { var p = SL.parseTopicKey(f.key); return SL.topicName(p.u, p.tp); }).join('、') + (foc.length > 3 ? ' 等 ' + foc.length + ' 个知识点' : ''), 'Mistake drill: ' + foc.slice(0, 3).map(function (f) { var p = SL.parseTopicKey(f.key); return SL.topicName(p.u, p.tp); }).join(', ') + (foc.length > 3 ? ' +' + (foc.length - 3) : '')), done: false, href: '#/practice?focus=1' });
     var kbD = SL.kbDue ? SL.kbDue().length : 0;
     if (kbD) auto.push({ id: 'auto-kb', auto: true, text: SL.L('回忆复习 ' + kbD + ' 个知识点要点', 'Recall-review ' + kbD + ' topics'), done: false, href: '#/kb/review?mode=due' });
     var weak = SL.weakTopics(1)[0];

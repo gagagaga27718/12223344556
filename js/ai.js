@@ -154,7 +154,7 @@
       }
     }
   };
-  AI.generateQuestions = function (unitId, topicIdx, n, difficulty, onText) {
+  AI.generateQuestions = function (unitId, topicIdx, n, difficulty, onText, seed) {
     var u = SL.unit(unitId), s = SL.subjectOfUnit(unitId);
     var topics = u.topics.map(function (tp, i) { return i + ': ' + tp.en; }).join('\n');
     var existing = SL.BANK.filter(function (q) { return q.u === unitId; }).slice(0, 25).map(function (q) { return '- ' + q.q.en; }).join('\n');
@@ -164,6 +164,7 @@
       'Difficulty (1=easy recall, 2=medium, 3=hard multi-step, 4=AP exam level): ' + difficulty + '.\n' +
       'Rules: exactly 4 options, one unambiguously correct answer (answer_index 0-3), plausible distractors based on common misconceptions, ' +
       'no "all of the above", accurate science/math, full bilingual text (natural Simplified Chinese in *_zh). The explanation must say why the answer is right and why the most tempting distractor is wrong.\n' +
+      (seed ? '\nThe student got this question WRONG. Write NEW questions on the same concept that target the misconception behind their wrong answer, in fresh contexts (do not copy or lightly reword it):\n' + seed + '\n' : '') +
       'Do not repeat these existing questions:\n' + existing;
     return AI.chat({
       system: 'You are an expert ' + s.name.en + ' item writer for high-school exams. Output only the JSON requested.',
@@ -196,6 +197,46 @@
       src: 'ai', createdAt: Date.now()
     };
     return { q: q, problems: problems, ok: !problems.length };
+  };
+
+  /* ---------- read a mistake from a photo and/or pasted text ---------- */
+  var X_SCHEMA = {
+    type: 'object', additionalProperties: false,
+    required: ['readable', 'subject', 'unit_id', 'topic_index', 'kind', 'question_en', 'question_zh', 'options', 'correct_index', 'correct_answer_en', 'correct_answer_zh', 'student_answer', 'explanation_en', 'explanation_zh', 'difficulty', 'note'],
+    properties: {
+      readable: { type: 'boolean' },
+      subject: { type: 'string', enum: ['geo', 'bio', 'precalc'] },
+      unit_id: { type: 'string' }, topic_index: { type: 'integer' },
+      kind: { type: 'string', enum: ['mcq', 'open'] },
+      question_en: { type: 'string' }, question_zh: { type: 'string' },
+      options: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['en', 'zh'], properties: { en: { type: 'string' }, zh: { type: 'string' } } } },
+      correct_index: { type: 'integer' },
+      correct_answer_en: { type: 'string' }, correct_answer_zh: { type: 'string' },
+      student_answer: { type: 'string' },
+      explanation_en: { type: 'string' }, explanation_zh: { type: 'string' },
+      difficulty: { type: 'integer' }, note: { type: 'string' }
+    }
+  };
+  AI.extractMistake = function (opts) {
+    // opts: {imageB64, mediaType, text, subjectHint}
+    var catalog = SL.SUBJECTS.map(function (s) {
+      return s.id + ' — ' + s.name.en + '\n' + s.units.map(function (u) { return '  ' + u.id + ': ' + u.name.en + ' | topics: ' + u.topics.map(function (tp, i) { return i + ' ' + tp.en; }).join('; '); }).join('\n');
+    }).join('\n');
+    var content = [];
+    if (opts.imageB64) content.push({ type: 'image', source: { type: 'base64', media_type: opts.mediaType || 'image/jpeg', data: opts.imageB64 } });
+    content.push({ type: 'text', text:
+      'This is a question a high-school student got wrong' + (opts.imageB64 ? ' (photo above)' : '') + '.' +
+      (opts.text ? '\nStudent\'s typed notes / question text:\n' + opts.text : '') +
+      (opts.subjectHint ? '\nCourse hint: ' + opts.subjectHint : '') +
+      '\n\nTasks: 1) transcribe the question exactly (and its answer choices if any); 2) work out the correct answer yourself — if the photo marks a different answer as correct, trust your own careful solution and say so in note; 3) read the student\'s answer if visible (circled/written), else empty string; 4) classify into ONE course, unit and topic from the catalog; 5) write a clear explanation of the correct answer and why the student\'s answer is wrong; 6) give both English and natural Simplified Chinese for every text field. ' +
+      'kind = "mcq" if there are answer choices (then correct_index is 0-based), otherwise "open" with options [] and correct_index -1. difficulty 1-4 (4 = AP exam level). If the image is unreadable or not a school question, set readable false and explain in note.\n\nCatalog:\n' + catalog });
+    return AI.chat({
+      system: 'You are a careful teacher who transcribes and solves students\' homework and exam questions. Be exact when transcribing; never invent text you cannot read. Output only the JSON requested.',
+      messages: [{ role: 'user', content: content }], format: X_SCHEMA, maxTokens: 8000, effort: 'high'
+    }).then(function (r) {
+      var d; try { d = JSON.parse(r.text); } catch (e) { throw new Error(L('AI 返回的格式无法解析', 'Could not parse the AI output')); }
+      return d;
+    });
   };
 
   /* minimal, safe markdown → HTML for tutor replies (escape first, then format) */

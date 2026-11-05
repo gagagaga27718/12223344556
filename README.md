@@ -11,6 +11,7 @@ does is stored in their own browser; there is no backend and no account system.
 | --- | --- |
 | Dashboard | Daily goal ring, today's tasks, course mastery, weekly stats, weak areas, recent activity, quick actions |
 | Knowledge base | Every course › unit › topic (208 topics) with bilingual key points, personal notes per topic (auto-saved), search, and recall review: recall first, reveal, rate Forgot / Fuzzy / Remembered → spaced schedule |
+| Add a mistake | Photo (camera) and/or typed question → AI transcribes, solves and classifies it (or manual entry with automatic topic suggestion) → saved to the bank + mistake notebook → AI writes targeted new questions (validated, you approve) → topic becomes a 7-day daily-practice focus |
 | Course pages | Intro, mastery ring, focused modules (vocabulary, maps/data, diagrams, experiments, FRQ, graph lab…), unit + topic mastery bars |
 | Practice | Filter by course / unit / topic / difficulty / format (MCQ, FRQ, drawing) / item style; count 5–50; random or adaptive |
 | Adaptive practice | Picks weak and due topics first; two misses in a row → easier items + concept refresher; two hits → harder items |
@@ -64,7 +65,7 @@ js/charts.js          SVG charts rendered at container width + tooltips
 js/ai.js              Anthropic SDK client, prompts, question generation + validation
 js/main.js            icons, navigation, hash router, actions, modal
 js/quiz.js            session engine, MCQ / FRQ / drawing, results, mock exam runner
-js/views-*.js         pages (views-kb.js = knowledge base + recall review)
+js/views-*.js         pages (views-kb.js = knowledge base + recall review; views-capture.js = add a mistake)
 proxy/worker.js       optional AI proxy template
 ```
 

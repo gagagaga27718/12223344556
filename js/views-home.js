@@ -87,7 +87,7 @@
     var qa = [
       ['#/practice', 'target', L('自定义练习', 'Custom practice')], ['#/exam', 'clock', L('模拟考试', 'Mock exam')],
       ['#/flashcards', 'cards', L('闪卡', 'Flashcards')], ['#/tutor', 'bot', 'AI Tutor'],
-      ['#/kb', 'book', L('知识库', 'Knowledge base')], ['#/mistakes', 'alert', L('错题本', 'Mistakes')]
+      ['#/kb', 'book', L('知识库', 'Knowledge base')], ['#/capture', 'camera', L('录入错题', 'Add a mistake')]
     ];
     html += '<div class="card"><div class="card-head"><h3>' + esc(L('快速操作', 'Quick actions')) + '</h3></div><div class="grid g2" style="gap:8px">' +
       qa.map(function (x) { return '<a class="btn" href="' + x[0] + '" style="justify-content:flex-start">' + I[x[1]] + esc(x[2]) + '</a>'; }).join('') + '</div></div>';
@@ -121,9 +121,20 @@
   });
   SL.act('quickAdaptive', function () {
     // whole-platform adaptive set focused on weak/due topics
-    var weak = SL.weakTopics(1)[0];
-    SL.startSession({ mode: 'adaptive', title: L('今日智能练习', 'Smart practice'), s: weak ? weak.s : null, count: 12, types: ['mcq'] });
+    SL.startDaily();
   });
+
+  // daily smart practice: focus topics from entered mistakes first, otherwise weakest/due topics
+  SL.startDaily = function () {
+    var foc = SL.activeFocus().map(function (f) { return f.key; });
+    if (foc.length) {
+      var units = []; foc.forEach(function (k) { var u = SL.parseTopicKey(k).u; if (units.indexOf(u) === -1) units.push(u); });
+      var subs = []; units.forEach(function (u) { var s = SL.subjectOfUnit(u).id; if (subs.indexOf(s) === -1) subs.push(s); });
+      return SL.startSession({ mode: 'adaptive', title: L('今日智能练习 · 错题专练', 'Smart practice · mistake drill'), s: subs.length === 1 ? subs[0] : null, units: units, topics: foc, count: 12, types: ['mcq'] });
+    }
+    var weak = SL.weakTopics(1)[0];
+    return SL.startSession({ mode: 'adaptive', title: L('今日智能练习', 'Smart practice'), s: weak ? weak.s : null, count: 12, types: ['mcq'] });
+  };
 
   /* ---------- course page ---------- */
   var MODULES = {
@@ -229,6 +240,7 @@
     return { fixed: pool.filter(function (q) { return q.src !== 'gen'; }).length, gens: pool.filter(function (q) { return q.src === 'gen'; }).length };
   }
   function renderPractice(m, q) {
+    if (q.focus === '1') { history.replaceState(null, '', '#/practice'); setTimeout(function () { SL.startDaily(); }, 0); }
     if (!PR || q.s || q.topic || q.unit || q.tags || q.types || q.adaptive) PR = defaultPR(q);
     if (q.go === '1') {
       // drop ?go=1 from history so "back" returns to the setup page instead of auto-starting again

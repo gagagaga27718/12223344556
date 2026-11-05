@@ -430,7 +430,7 @@
       '<div class="row mt16">' +
       '<a class="btn primary" href="#/practice">' + esc(L('再练一组', 'Practise again')) + '</a>' +
       (wrongIds ? '<a class="btn" href="#/mistakes">' + esc(L('查看错题本', 'Open mistakes')) + '</a>' : '') +
-      '<a class="btn ghost" href="#/">🍎 ' + esc(L('去喂宠物', 'Feed your pet')) + '</a></div>';
+      '<a class="btn ghost" href="#/pet">🍎 ' + esc(L('去喂宠物', 'Feed your pet')) + '</a></div>';
     return { title: L('练习结果', 'Session results'), html: html, accent: r.s || 'none' };
   }
 

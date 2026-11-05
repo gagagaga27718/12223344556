@@ -41,7 +41,7 @@
     var dueN = SL.dueTopics().length + SL.dueMistakes().length + (SL.kbDue ? SL.kbDue().length : 0);
     return [
       { group: L('学习', 'Learn') },
-      { href: '#/', icon: 'paw', zh: '我的宠物', en: 'My pet', match: /^\/$/ },
+      { href: '#/pet', icon: 'paw', zh: '我的宠物', en: 'My pet', match: /^\/pet/ },
       { href: '#/dashboard', icon: 'home', zh: '学习概览', en: 'Overview', match: /^\/dashboard/ },
       { href: '#/kb', icon: 'book', zh: '知识库', en: 'Knowledge base', match: /^\/kb/ },
       { href: '#/practice', icon: 'target', zh: '练习', en: 'Practice', match: /^\/(practice|quiz|results)/ },
@@ -86,7 +86,7 @@
     app.classList.toggle('expanded', SL.store.settings.sidebar === 'open-force');
 
     var tabs = [
-      { href: '#/', icon: 'paw', zh: '宠物', en: 'Pet', match: /^\/(dashboard)?$/ },
+      { href: '#/pet', icon: 'paw', zh: '宠物', en: 'Pet', match: /^\/(pet|dashboard)?$/ },
       { href: '#/practice', icon: 'target', zh: '练习', en: 'Practice', match: /^\/(practice|quiz|results|course)/ },
       { href: '#/review', icon: 'repeat', zh: '复习', en: 'Review', match: /^\/(review|mistakes|flashcards|kb)/ },
       { href: '#/analytics', icon: 'chart', zh: '分析', en: 'Stats', match: /^\/(analytics|achievements)/ },
@@ -130,15 +130,16 @@
       var m = r.path.match(SL.routes[i].re);
       if (m) { view = SL.routes[i].fn(m, r.query) ; break; }
     }
-    if (!view) view = { title: L('页面不存在', 'Not found'), html: '<div class="card empty"><div class="em-title">' + esc(L('页面不存在', 'Page not found')) + '</div><a class="btn primary" href="#/">' + esc(L('回到首页', 'Go home')) + '</a></div>' };
+    if (!view) view = { title: L('页面不存在', 'Not found'), html: '<div class="card empty"><div class="em-title">' + esc(L('页面不存在', 'Page not found')) + '</div><a class="btn primary" href="#/pet">' + esc(L('回到首页', 'Go home')) + '</a></div>' };
     if (typeof currentCleanup === 'function') { try { currentCleanup(); } catch (e) {} }
     currentCleanup = view.cleanup || null;
     document.body.setAttribute('data-accent', view.accent || 'none');
+    document.body.classList.toggle('splash-mode', !!view.fullscreen);
     renderNav(r.path);
     renderTopbar(view);
     var root = document.getElementById('view');
     root.className = 'view' + (view.narrow ? ' narrow' : '');
-    root.innerHTML = view.html + '<p class="footer-note">StudyLoop · ' + esc(L('数据只保存在本机浏览器', 'Data is stored only in this browser')) + '</p>';
+    root.innerHTML = view.html + (view.fullscreen ? '' : '<p class="footer-note">StudyLoop · ' + esc(L('数据只保存在本机浏览器', 'Data is stored only in this browser')) + '</p>');
     document.title = (view.title ? view.title + ' · ' : '') + 'StudyLoop';
     if (SL.chart && SL.chart.mount) SL.chart.mount(root);
     if (view.after) { try { view.after(root); } catch (e) { console.error(e); } }

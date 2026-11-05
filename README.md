@@ -9,7 +9,8 @@ does is stored in their own browser; there is no backend and no account system.
 
 | Area | What it does |
 | --- | --- |
-| Study pet | Landing page: an original pixel pet that grows from egg → baby → kid → teen → scholar. Earn food by studying (correct answer 🍎1, recall "remembered" 🍎1, flashcard known 🍎1, mistake fixed 🍎3, daily goal 🍎5); fullness drops slowly, the pet never dies |
+| Splash (#/) | Full-screen opening: one big line chosen by how long you were away (just now → a day → days → weeks → months → a year+, increasingly sarcastic; never the same line twice in a row) above the pet in its current state; swipe left/right (or → / Enter) to go in |
+| Study pet (#/pet) | Landing page: an original pixel pet that grows from egg → baby → kid → teen → scholar. Earn food by studying (correct answer 🍎1, recall "remembered" 🍎1, flashcard known 🍎1, mistake fixed 🍎3, daily goal 🍎5); fullness drops slowly; moods: happy ^_^, hungry, starving (flattened), and "fainted" (grey, X eyes, halo) after 30+ days away — 3 apples revive it with its level kept |
 | Dashboard (#/dashboard) | Daily goal ring, today's tasks, course mastery, weekly stats, weak areas, recent activity, quick actions |
 | Knowledge base | Every course › unit › topic (208 topics) with bilingual key points, personal notes per topic (auto-saved), search, and recall review: recall first, reveal, rate Forgot / Fuzzy / Remembered → spaced schedule |
 | Add a mistake | Photo (camera) and/or typed question → AI transcribes, solves and classifies it (or manual entry with automatic topic suggestion) → saved to the bank + mistake notebook → AI writes targeted new questions (validated, you approve) → topic becomes a 7-day daily-practice focus |

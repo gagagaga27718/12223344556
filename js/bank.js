@@ -15,6 +15,7 @@
     if (!u || tp == null || tp < 0 || !u.topics[tp]) return SL.L('综合', 'General');
     return SL.t(u.topics[tp]);
   };
+  SL.topicNameEn = function (unitId, tp) { var u = SL.unit(unitId); return u && tp >= 0 && u.topics[tp] ? u.topics[tp].en : 'General'; };
   SL.topicKey = function (unitId, tp) { return unitId + ':' + (tp == null ? -1 : tp); };
   SL.parseTopicKey = function (k) { var p = String(k).split(':'); return { u: p[0], tp: parseInt(p[1], 10) }; };
 

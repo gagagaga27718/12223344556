@@ -296,7 +296,7 @@ textarea.input { min-height: 110px; resize: vertical; line-height: 1.5; }
 .topic-row { display: grid; grid-template-columns: minmax(0, 1fr) 72px 40px; gap: 10px; align-items: center; padding: 7px 0; font-size: 13px; }
 .topic-row .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .topic-row .pct { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; font-size: 12px; }
-.module-card { display: flex; gap: 12px; align-items: flex-start; }
+.module-card, a.card.module-card { display: flex; gap: 12px; align-items: flex-start; }
 .module-card .mi { width: 38px; height: 38px; border-radius: 10px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; flex: none; font-size: 18px; }
 .module-card h4 { font-size: 14px; font-weight: 700; }
 .module-card p { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
@@ -446,3 +446,4 @@ table.tbl th { color: var(--muted); font-weight: 700; border-top: 0; }
 .footer-note { text-align: center; color: var(--faint); font-size: 12px; padding: 24px 0 8px; }
 .md p { margin: 0 0 8px; } .md ul, .md ol { margin: 0 0 8px; padding-left: 20px; } .md code { font-family: var(--mono); background: var(--surface-3); padding: 1px 4px; border-radius: 4px; font-size: 13px; }
 .md h4 { font-size: 14px; margin: 10px 0 4px; }
+a.card.row { display: flex; }

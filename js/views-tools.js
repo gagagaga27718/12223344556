@@ -14,7 +14,7 @@
 
   function letter(i) { return String.fromCharCode(65 + i); }
   function qBlock(q) {
-    var out = 'Question (' + (SL.unit(q.u) ? SL.unit(q.u).name.en : q.u) + ' — topic: ' + SL.topicName(q.u, q.tp) + '):\n' + (q.q.en || q.q.zh);
+    var out = 'Question (' + (SL.unit(q.u) ? SL.unit(q.u).name.en : q.u) + ' — topic: ' + SL.topicNameEn(q.u, q.tp) + '):\n' + (q.q.en || q.q.zh);
     if (q.o) out += '\nOptions:\n' + q.o.map(function (o, i) { return letter(i) + '. ' + (o.en || o.zh); }).join('\n') + '\nCorrect answer: ' + letter(q.a) + '. ' + (q.o[q.a].en || q.o[q.a].zh);
     if (q.e) out += '\nBank explanation: ' + (q.e.en || q.e.zh);
     return out;
@@ -35,7 +35,7 @@
     }
     if (task === 'explain' && query.topic) {
       var p = SL.parseTopicKey(query.topic);
-      return 'Explain the topic "' + SL.topicName(p.u, p.tp) + '" (' + SL.unit(p.u).name.en + '). I have been getting questions on it wrong. Start from the basics, give an example, then give me one quick check question.';
+      return 'Explain the topic "' + SL.topicNameEn(p.u, p.tp) + '" (' + SL.unit(p.u).name.en + '). I have been getting questions on it wrong. Start from the basics, give an example, then give me one quick check question.';
     }
     if (task === 'notes' && query.s) {
       return 'Here are my notes for ' + SL.subject(query.s).name.en + ':\n\n' + (SL.store.notes[query.s] || '(no notes yet)').slice(0, 6000) + '\n\nQuiz me on these notes: ask me 3 questions one at a time and wait for my answer before giving feedback.';
@@ -44,14 +44,14 @@
   }
   function guidancePrompt(sid) {
     var s = SL.subject(sid), sm = SL.subjectMastery(sid), st = SL.stats(function (x) { return x.s === sid; });
-    var weak = SL.weakTopics(6, sid).map(function (w) { return SL.topicName(w.u, w.tp) + ' (' + w.m + '%)'; });
+    var weak = SL.weakTopics(6, sid).map(function (w) { return SL.topicNameEn(w.u, w.tp) + ' (' + w.m + '%)'; });
     var exam = SL.store.planner.exams[sid];
     return 'My data for ' + s.name.en + ': ' + st.n + ' questions answered, accuracy ' + (st.acc == null ? 'n/a' : st.acc + '%') + ', average mastery ' + sm.avg + '% across ' + sm.total + ' topics (' + sm.started + ' started).' +
       (weak.length ? ' Weakest topics: ' + weak.join(', ') + '.' : ' No weak topics identified yet.') + (exam ? ' My exam is on ' + exam + '.' : '') +
       ' Give me a concrete study plan for the next 7 days (what to practise each day, in StudyLoop terms: adaptive practice, review, flashcards, mock exam).';
   }
   function examPrompt(sid) {
-    var weak = SL.weakTopics(5, sid).map(function (w) { return SL.topicName(w.u, w.tp); });
+    var weak = SL.weakTopics(5, sid).map(function (w) { return SL.topicNameEn(w.u, w.tp); });
     return 'Help me prepare for my ' + SL.subject(sid).name.en + ' exam. Summarise the highest-yield ideas unit by unit, list the most common traps, and explain how points are earned on the free-response section.' + (weak.length ? ' Spend extra time on: ' + weak.join(', ') + '.' : '');
   }
 

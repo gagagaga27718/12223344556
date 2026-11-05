@@ -2,40 +2,55 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>StudyLoop · 三科互动刷题</title>
-<meta name="description" content="AP Human Geography, Honors Biology, Pre-Calculus 互动刷题：无限新题、FRQ、画图题、错题本、笔记，中英双语切换。">
-<link rel="preconnect" href="https://api.fontshare.com">
-<link href="https://api.fontshare.com/v2/css?f[]=chillax@500,600,700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>StudyLoop · 智能学习平台</title>
+<meta name="description" content="StudyLoop：AP Human Geography、Honors Biology、Pre-Calculus 智能学习平台——自适应练习、错题本、间隔复习、模拟考试、学习数据分析与 AI Tutor，中英双语。">
+<meta name="theme-color" content="#1e3a8a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23b05521'/><path d='M8 21c4-1 8-1 16 0M8 16c4-1 8-1 16 0M8 11c4-1 8-1 16 0' stroke='%23fff' stroke-width='2' stroke-linecap='round'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%231e3a8a'/><path d='M8 21c4-1 8-1 16 0M8 16c4-1 8-1 16 0M8 11c4-1 8-1 16 0' stroke='%23fff' stroke-width='2' stroke-linecap='round'/></svg>">
 <link rel="stylesheet" href="css/style.css">
+<script>
+  // apply saved theme before first paint to avoid a flash
+  try { var s = JSON.parse(localStorage.getItem('studyloop_v3') || 'null'); var th = s && s.settings && s.settings.theme; if (th === 'dark' || th === 'light') document.documentElement.setAttribute('data-theme', th); } catch (e) {}
+</script>
 </head>
 <body>
-<header class="site-header">
-  <button class="logo" data-action="home" data-testid="button-home" aria-label="Home">
-    <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M8 21c4-1 8-1 16 0M8 16c4-1 8-1 16 0M8 11c4-1 8-1 16 0" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
-    <span class="logo-text">StudyLoop</span>
-  </button>
-  <div class="head-actions">
-    <button class="icon-btn" data-testid="button-wrongbook" aria-label="Wrongbook">错题本</button>
-    <button class="icon-btn" data-testid="button-notes" aria-label="Notes">笔记</button>
-    <button class="lang-toggle" data-action="lang" data-testid="button-lang" aria-label="Switch language">
-      <span id="langLabel">切换 English</span>
-    </button>
+<div class="app" id="app">
+  <aside class="sidebar" id="sidebar" aria-label="Main navigation"></aside>
+  <div class="main">
+    <header class="topbar" id="topbar"></header>
+    <main class="view" id="view" tabindex="-1">
+      <div class="empty"><span class="spinner" aria-hidden="true"></span><p class="mt8">Loading…</p></div>
+    </main>
   </div>
-</header>
-<main id="view" aria-live="polite"></main>
-<footer class="site-footer">
-  <p id="footerNote">无限刷题 · FRQ · 画图 · 错题本 · 笔记 · 中英双语</p>
-</footer>
+</div>
+<nav class="tabbar" id="tabbar" aria-label="Main navigation"></nav>
+<div id="toasts" aria-live="polite"></div>
+<div id="modal-root"></div>
+<noscript><p style="padding:24px">StudyLoop needs JavaScript enabled.</p></noscript>
+
+<!-- data (order matters) -->
 <script src="js/data-geo.js"></script>
 <script src="js/data-bio.js"></script>
 <script src="js/data-precalc.js"></script>
 <script src="js/generators.js"></script>
 <script src="js/data-extras.js"></script>
-<script src="js/app.js"></script>
+<script src="js/data-more.js"></script>
+<!-- engine -->
+<script src="js/core.js"></script>
+<script src="js/bank.js"></script>
+<script src="js/learn.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/ai.js"></script>
+<!-- ui -->
+<script src="js/main.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/views-home.js"></script>
+<script src="js/views-study.js"></script>
+<script src="js/views-insight.js"></script>
+<script src="js/views-tools.js"></script>
+<script>SL.boot();</script>
 </body>
 </html>

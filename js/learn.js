@@ -174,6 +174,12 @@
     else if (correct && m && !m.mastered) { if (mistakeRight(m, now)) events.push({ type: 'mistakeMastered', id: q.id }); }
     var after = SL.mastery(rec, now);
     if ((before == null || before < 85) && after >= 85) events.push({ type: 'topicMastered', key: key });
+    if (SL.petEarn) {
+      if (correct) SL.petEarn(1, 'correct');
+      if (events.some(function (ev) { return ev.type === 'mistakeMastered'; })) SL.petEarn(3, 'mistake');
+      var goal = st.planner.dailyGoal || 20, pt = st.pet || {};
+      if (pt.goalDay !== SL.dayKey() && SL.todayCount() >= goal) { st.pet = pt; pt.goalDay = SL.dayKey(); SL.petEarn(5, 'goal'); }
+    }
     events = events.concat(SL.checkAchievements());
     SL.save();
     return { events: events, mastery: after, key: key };
@@ -368,6 +374,7 @@
       st.interval = 0; st.ease = Math.max(1.3, st.ease - 0.2); st.fam = false;
     }
     st.due = known ? SL.startOfDay(now) + st.interval * DAY : now;
+    if (known && SL.petEarn) SL.petEarn(1, 'card');
     SL.save();
     return SL.checkAchievements();
   };

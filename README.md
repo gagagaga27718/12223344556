@@ -9,7 +9,8 @@ does is stored in their own browser; there is no backend and no account system.
 
 | Area | What it does |
 | --- | --- |
-| Dashboard | Daily goal ring, today's tasks, course mastery, weekly stats, weak areas, recent activity, quick actions |
+| Study pet | Landing page: an original pixel pet that grows from egg → baby → kid → teen → scholar. Earn food by studying (correct answer 🍎1, recall "remembered" 🍎1, flashcard known 🍎1, mistake fixed 🍎3, daily goal 🍎5); fullness drops slowly, the pet never dies |
+| Dashboard (#/dashboard) | Daily goal ring, today's tasks, course mastery, weekly stats, weak areas, recent activity, quick actions |
 | Knowledge base | Every course › unit › topic (208 topics) with bilingual key points, personal notes per topic (auto-saved), search, and recall review: recall first, reveal, rate Forgot / Fuzzy / Remembered → spaced schedule |
 | Add a mistake | Photo (camera) and/or typed question → AI transcribes, solves and classifies it (or manual entry with automatic topic suggestion) → saved to the bank + mistake notebook → AI writes targeted new questions (validated, you approve) → topic becomes a 7-day daily-practice focus |
 | Course pages | Intro, mastery ring, focused modules (vocabulary, maps/data, diagrams, experiments, FRQ, graph lab…), unit + topic mastery bars |

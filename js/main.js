@@ -30,6 +30,7 @@
     x: ic('<path d="M6 6l12 12M18 6 6 18"/>'),
     flask: ic('<path d="M9 3h6M10 3v6L4 19a1.5 1.5 0 0 0 1.3 2h13.4A1.5 1.5 0 0 0 20 19l-6-10V3"/>'),
     sigma: ic('<path d="M18 4H6l6 8-6 8h12"/>'),
+    paw: ic('<circle cx="7" cy="9" r="1.8"/><circle cx="12" cy="6.5" r="1.8"/><circle cx="17" cy="9" r="1.8"/><path d="M12 12c-3 0-5.5 3-5.5 5.2 0 1.6 1.4 2.3 2.8 1.8 1-.4 1.8-.6 2.7-.6s1.7.2 2.7.6c1.4.5 2.8-.2 2.8-1.8C17.5 15 15 12 12 12z"/>'),
     camera: ic('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>'),
     more: ic('<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>')
   };
@@ -40,7 +41,8 @@
     var dueN = SL.dueTopics().length + SL.dueMistakes().length + (SL.kbDue ? SL.kbDue().length : 0);
     return [
       { group: L('学习', 'Learn') },
-      { href: '#/', icon: 'home', zh: '首页', en: 'Dashboard', match: /^\/$/ },
+      { href: '#/', icon: 'paw', zh: '我的宠物', en: 'My pet', match: /^\/$/ },
+      { href: '#/dashboard', icon: 'home', zh: '学习概览', en: 'Overview', match: /^\/dashboard/ },
       { href: '#/kb', icon: 'book', zh: '知识库', en: 'Knowledge base', match: /^\/kb/ },
       { href: '#/practice', icon: 'target', zh: '练习', en: 'Practice', match: /^\/(practice|quiz|results)/ },
       { href: '#/review', icon: 'repeat', zh: '今日复习', en: 'Review', match: /^\/review/, badge: dueN || '' },
@@ -84,7 +86,7 @@
     app.classList.toggle('expanded', SL.store.settings.sidebar === 'open-force');
 
     var tabs = [
-      { href: '#/', icon: 'home', zh: '首页', en: 'Home', match: /^\/$/ },
+      { href: '#/', icon: 'paw', zh: '宠物', en: 'Pet', match: /^\/(dashboard)?$/ },
       { href: '#/practice', icon: 'target', zh: '练习', en: 'Practice', match: /^\/(practice|quiz|results|course)/ },
       { href: '#/review', icon: 'repeat', zh: '复习', en: 'Review', match: /^\/(review|mistakes|flashcards|kb)/ },
       { href: '#/analytics', icon: 'chart', zh: '分析', en: 'Stats', match: /^\/(analytics|achievements)/ },

@@ -47,6 +47,7 @@
     else if (g === 1) { r.interval = Math.max(1, Math.round((r.interval || 1) * 1.2)); r.ease = Math.max(1.3, r.ease - 0.05); }
     else { r.interval = r.interval ? Math.min(120, Math.round(r.interval * r.ease)) : 2; r.ease = Math.min(2.8, r.ease + 0.05); }
     r.due = SL.startOfDay(now) + r.interval * DAY;
+    if (g === 2 && SL.petEarn) SL.petEarn(1, 'recall');
     SL.save();
     return r;
   }

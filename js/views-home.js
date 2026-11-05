@@ -98,7 +98,7 @@
       '<div class="bar thin mt12"><i style="width:' + Math.round(got / SL.ACHIEVEMENTS.length * 100) + '%"></i></div></a>';
 
     html += '</div></div>';
-    return { title: L('首页', 'Dashboard'), html: html };
+    return { title: L('学习概览', 'Overview'), html: html };
   }
 
   SL.renderTaskList = function (plan, limit) {
@@ -317,7 +317,7 @@
     };
   }
 
-  SL.route(/^\/$/, renderDashboard);
+  SL.route(/^\/dashboard$/, renderDashboard);
   SL.route(/^\/course\/(\w+)$/, renderCourse);
   SL.route(/^\/practice$/, renderPractice);
   SL.route(/^\/more$/, renderMore);

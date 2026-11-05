@@ -186,7 +186,7 @@
     var right = a.c;
     var letter = function (orig) { return String.fromCharCode(65 + perm.indexOf(orig)); };
     var html = '<div class="feedback ' + (right ? 'ok' : 'bad') + '" data-testid="explain">' +
-      '<span class="verdict">' + (right ? '✓ ' + esc(L('回答正确', 'Correct')) : '✗ ' + esc(L('回答错误', 'Not quite'))) + '</span>';
+      '<span class="verdict">' + (right ? '✓ ' + esc(L('回答正确', 'Correct')) + ' <span class="chip warn" style="margin-left:6px">🍎 +1</span>' : '✗ ' + esc(L('回答错误', 'Not quite'))) + '</span>';
     if (!right) {
       html += '<div class="small">' + esc(L('你选了 ', 'You chose ')) + '<b>' + letter(a.chosen) + '. ' + esc(t(q.o[a.chosen])) + '</b>' +
         esc(L('；正确答案是 ', '; the correct answer is ')) + '<b>' + letter(q.a) + '. ' + esc(t(q.o[q.a])) + '</b></div>';
@@ -430,7 +430,7 @@
       '<div class="row mt16">' +
       '<a class="btn primary" href="#/practice">' + esc(L('再练一组', 'Practise again')) + '</a>' +
       (wrongIds ? '<a class="btn" href="#/mistakes">' + esc(L('查看错题本', 'Open mistakes')) + '</a>' : '') +
-      '<a class="btn ghost" href="#/">' + esc(L('回到首页', 'Dashboard')) + '</a></div>';
+      '<a class="btn ghost" href="#/">🍎 ' + esc(L('去喂宠物', 'Feed your pet')) + '</a></div>';
     return { title: L('练习结果', 'Session results'), html: html, accent: r.s || 'none' };
   }
 

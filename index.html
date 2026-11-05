@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudyLoop · 三科互动刷题</title>
+<meta name="description" content="AP Human Geography, Honors Biology, Pre-Calculus 互动刷题：无限新题、FRQ、画图题、错题本、笔记，中英双语切换。">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=chillax@500,600,700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23b05521'/><path d='M8 21c4-1 8-1 16 0M8 16c4-1 8-1 16 0M8 11c4-1 8-1 16 0' stroke='%23fff' stroke-width='2' stroke-linecap='round'/></svg>">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <button class="logo" data-action="home" data-testid="button-home" aria-label="Home">
+    <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M8 21c4-1 8-1 16 0M8 16c4-1 8-1 16 0M8 11c4-1 8-1 16 0" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+    <span class="logo-text">StudyLoop</span>
+  </button>
+  <div class="head-actions">
+    <button class="icon-btn" data-testid="button-wrongbook" aria-label="Wrongbook">错题本</button>
+    <button class="icon-btn" data-testid="button-notes" aria-label="Notes">笔记</button>
+    <button class="lang-toggle" data-action="lang" data-testid="button-lang" aria-label="Switch language">
+      <span id="langLabel">切换 English</span>
+    </button>
+  </div>
+</header>
+<main id="view" aria-live="polite"></main>
+<footer class="site-footer">
+  <p id="footerNote">无限刷题 · FRQ · 画图 · 错题本 · 笔记 · 中英双语</p>
+</footer>
+<script src="js/data-geo.js"></script>
+<script src="js/data-bio.js"></script>
+<script src="js/data-precalc.js"></script>
+<script src="js/generators.js"></script>
+<script src="js/data-extras.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

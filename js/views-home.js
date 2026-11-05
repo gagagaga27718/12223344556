@@ -87,7 +87,7 @@
     var qa = [
       ['#/practice', 'target', L('自定义练习', 'Custom practice')], ['#/exam', 'clock', L('模拟考试', 'Mock exam')],
       ['#/flashcards', 'cards', L('闪卡', 'Flashcards')], ['#/tutor', 'bot', 'AI Tutor'],
-      ['#/graph', 'graph', L('函数图像', 'Graph lab')], ['#/mistakes', 'alert', L('错题本', 'Mistakes')]
+      ['#/kb', 'book', L('知识库', 'Knowledge base')], ['#/mistakes', 'alert', L('错题本', 'Mistakes')]
     ];
     html += '<div class="card"><div class="card-head"><h3>' + esc(L('快速操作', 'Quick actions')) + '</h3></div><div class="grid g2" style="gap:8px">' +
       qa.map(function (x) { return '<a class="btn" href="' + x[0] + '" style="justify-content:flex-start">' + I[x[1]] + esc(x[2]) + '</a>'; }).join('') + '</div></div>';
@@ -172,7 +172,8 @@
       '<a class="btn" href="#/mistakes?s=' + s.id + '">' + esc(L('错题', 'Mistakes')) + (mistakesN ? ' (' + mistakesN + ')' : '') + '</a>' +
       '<a class="btn" href="#/exam?s=' + s.id + '">' + esc(L('模拟考试', 'Mock exam')) + '</a>' +
       '<a class="btn" href="#/tutor?s=' + s.id + '">' + I.bot + 'AI Tutor</a>' +
-      '<a class="btn" href="#/flashcards?s=' + s.id + '">' + esc(L('闪卡', 'Flashcards')) + '</a></div></div>' +
+      '<a class="btn" href="#/flashcards?s=' + s.id + '">' + esc(L('闪卡', 'Flashcards')) + '</a>' +
+      '<a class="btn" href="#/kb?s=' + s.id + '">' + I.book + esc(L('知识点与笔记', 'Key points & notes')) + '</a></div></div>' +
       '<div class="row" style="gap:20px">' + SL.chart.ring(sm.avg, 104, subjColor(s.id), L('课程掌握度', 'Course mastery')) +
       '<div class="stack" style="gap:8px"><div class="stat"><span class="label">' + esc(L('已掌握知识点', 'Topics mastered')) + '</span><span class="value" style="font-size:20px">' + mastered + ' / ' + sm.total + '</span></div>' +
       '<div class="stat"><span class="label">' + esc(L('已做题 · 正确率', 'Answered · accuracy')) + '</span><span class="value" style="font-size:20px">' + sst.n + ' · ' + (sst.acc == null ? '—' : sst.acc + '%') + '</span></div>' +
@@ -197,7 +198,8 @@
           }).join('') + '</div>' +
           '<div class="row mt12"><a class="btn sm accent" href="#/practice?s=' + s.id + '&unit=' + u.id + '&go=1" data-testid="button-start-' + u.id + '">' + esc(L('练习本单元', 'Practise unit')) + '</a>' +
           '<a class="btn sm" href="#/practice?s=' + s.id + '&unit=' + u.id + '&adaptive=1&go=1">' + esc(L('自适应', 'Adaptive')) + '</a>' +
-          '<a class="btn sm ghost" href="#/flashcards?unit=' + u.id + '">' + esc(L('闪卡', 'Cards')) + '</a></div></div>';
+          '<a class="btn sm ghost" href="#/flashcards?unit=' + u.id + '">' + esc(L('闪卡', 'Cards')) + '</a>' +
+          '<a class="btn sm ghost" href="#/kb?u=' + u.id + '">' + esc(L('知识点', 'Key points')) + '</a></div></div>';
       }).join('') + '</div>';
 
     var recent = SL.store.attempts.filter(function (x) { return x.s === s.id; }).slice(-6).reverse();

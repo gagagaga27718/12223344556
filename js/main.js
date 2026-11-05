@@ -36,10 +36,11 @@
 
   /* ---------- navigation ---------- */
   function navItems() {
-    var dueN = SL.dueTopics().length + SL.dueMistakes().length;
+    var dueN = SL.dueTopics().length + SL.dueMistakes().length + (SL.kbDue ? SL.kbDue().length : 0);
     return [
       { group: L('学习', 'Learn') },
       { href: '#/', icon: 'home', zh: '首页', en: 'Dashboard', match: /^\/$/ },
+      { href: '#/kb', icon: 'book', zh: '知识库', en: 'Knowledge base', match: /^\/kb/ },
       { href: '#/practice', icon: 'target', zh: '练习', en: 'Practice', match: /^\/(practice|quiz|results)/ },
       { href: '#/review', icon: 'repeat', zh: '今日复习', en: 'Review', match: /^\/review/, badge: dueN || '' },
       { href: '#/mistakes', icon: 'alert', zh: '错题本', en: 'Mistakes', match: /^\/mistakes/ },
@@ -83,7 +84,7 @@
     var tabs = [
       { href: '#/', icon: 'home', zh: '首页', en: 'Home', match: /^\/$/ },
       { href: '#/practice', icon: 'target', zh: '练习', en: 'Practice', match: /^\/(practice|quiz|results|course)/ },
-      { href: '#/review', icon: 'repeat', zh: '复习', en: 'Review', match: /^\/(review|mistakes|flashcards)/ },
+      { href: '#/review', icon: 'repeat', zh: '复习', en: 'Review', match: /^\/(review|mistakes|flashcards|kb)/ },
       { href: '#/analytics', icon: 'chart', zh: '分析', en: 'Stats', match: /^\/(analytics|achievements)/ },
       { href: '#/more', icon: 'more', zh: '更多', en: 'More', match: /^\/(more|tutor|exam|planner|graph|notes|settings)/ }
     ];

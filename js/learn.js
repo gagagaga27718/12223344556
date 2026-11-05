@@ -382,6 +382,8 @@
     var dueT = SL.dueTopics(now), dueM = SL.dueMistakes(now);
     if (dueT.length) auto.push({ id: 'auto-review', auto: true, text: SL.L('复习到期的 ' + dueT.length + ' 个知识点', 'Review ' + dueT.length + ' due topics'), done: false, href: '#/review' });
     if (dueM.length) auto.push({ id: 'auto-mistakes', auto: true, text: SL.L('重练 ' + dueM.length + ' 道到期错题', 'Retry ' + dueM.length + ' due mistakes'), done: false, href: '#/review' });
+    var kbD = SL.kbDue ? SL.kbDue().length : 0;
+    if (kbD) auto.push({ id: 'auto-kb', auto: true, text: SL.L('回忆复习 ' + kbD + ' 个知识点要点', 'Recall-review ' + kbD + ' topics'), done: false, href: '#/kb/review?mode=due' });
     var weak = SL.weakTopics(1)[0];
     if (weak) auto.push({ id: 'auto-weak', auto: true, text: SL.L('专项练习薄弱点：', 'Targeted practice: ') + SL.topicName(weak.u, weak.tp), done: false, href: '#/practice?topic=' + encodeURIComponent(weak.key) + '&adaptive=1' });
     // exam countdowns

@@ -96,6 +96,8 @@
       esc(L('间隔复习会根据你的历史表现安排：刚学的知识点很快复习，熟练的间隔逐渐拉长，反复出错的会更频繁出现。', 'Spaced repetition schedules from your history: new topics come back soon, solid ones space out, repeated misses return more often.')) + '</p>' +
       '<div class="row mt16">' + (dueT.length || dueM.length ? '<button class="btn solid" data-act="startReview">' + esc(L('开始复习', 'Start review')) + ' (' + (dueT.length + dueM.length) + ')</button>' : '') +
       (cardsDue ? '<a class="btn" href="#/flashcards/study?mode=due">' + esc(L('复习到期闪卡 ', 'Due flashcards ')) + '(' + cardsDue + ')</a>' : '') + '</div></div>';
+    var kbDue = SL.kbDue ? SL.kbDue().length : 0;
+    html += '<a class="card mt16 row between" href="#/kb/review?mode=due" style="display:flex"><div><div class="bold">📖 ' + esc(L('知识库：要点回忆复习', 'Knowledge base: recall review')) + '</div><div class="small muted">' + esc(kbDue ? L(kbDue + ' 个知识点的要点今天该回忆了', kbDue + ' topics are due for recall today') : L('今天没有到期的知识点要点，可以去知识库学新内容', 'No key points due — learn new ones in the knowledge base')) + '</div></div><span class="chip ' + (kbDue ? 'bad' : 'good') + '">' + kbDue + '</span></a>';
     html += '<div class="grid g2 mt16" style="align-items:start"><div class="card"><div class="card-head"><h3>' + esc(L('到期的知识点', 'Topics due')) + ' · ' + dueT.length + '</h3></div>' +
       (dueT.length ? '<div class="list">' + dueT.slice(0, 30).map(function (d) {
         var p = SL.parseTopicKey(d.key), s = SL.subjectOfUnit(p.u);

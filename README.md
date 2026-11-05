@@ -10,6 +10,7 @@ does is stored in their own browser; there is no backend and no account system.
 | Area | What it does |
 | --- | --- |
 | Dashboard | Daily goal ring, today's tasks, course mastery, weekly stats, weak areas, recent activity, quick actions |
+| Knowledge base | Every course › unit › topic (208 topics) with bilingual key points, personal notes per topic (auto-saved), search, and recall review: recall first, reveal, rate Forgot / Fuzzy / Remembered → spaced schedule |
 | Course pages | Intro, mastery ring, focused modules (vocabulary, maps/data, diagrams, experiments, FRQ, graph lab…), unit + topic mastery bars |
 | Practice | Filter by course / unit / topic / difficulty / format (MCQ, FRQ, drawing) / item style; count 5–50; random or adaptive |
 | Adaptive practice | Picks weak and due topics first; two misses in a row → easier items + concept refresher; two hits → harder items |
@@ -52,7 +53,8 @@ no duplicate) and must be approved one by one before they join the bank.
 ```
 index.html            shell + script order
 css/style.css         design tokens (light/dark), layout, components
-js/data-*.js          question banks (data-more.js: diagram/data/experiment/map/graph items)
+js/data-*.js          question banks (data-more.js: figure items; data-more2.js: thin-unit expansion)
+js/kb-*.js            knowledge base key points per topic (geo / bio / precalc)
 js/generators.js      randomized question generators + SVG helpers
 js/data-extras.js     FRQ + drawing tasks
 js/core.js            utils, storage (v3 + v2 migration), i18n, theme, toast
@@ -62,7 +64,7 @@ js/charts.js          SVG charts rendered at container width + tooltips
 js/ai.js              Anthropic SDK client, prompts, question generation + validation
 js/main.js            icons, navigation, hash router, actions, modal
 js/quiz.js            session engine, MCQ / FRQ / drawing, results, mock exam runner
-js/views-*.js         pages
+js/views-*.js         pages (views-kb.js = knowledge base + recall review)
 proxy/worker.js       optional AI proxy template
 ```
 

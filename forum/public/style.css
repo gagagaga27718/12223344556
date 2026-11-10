@@ -1,0 +1,130 @@
+/* 千禧论坛 —— 2000 年代 BBS 风格 */
+* { box-sizing: border-box; }
+html { background: #c9d6e8 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Crect width='8' height='8' fill='%23c9d6e8'/%3E%3Crect width='4' height='4' fill='%23bfcde2'/%3E%3Crect x='4' y='4' width='4' height='4' fill='%23bfcde2'/%3E%3C/svg%3E"); }
+body { margin: 0; padding: 8px 0 20px; font: 12px/1.6 Verdana, Tahoma, "宋体", SimSun, "Microsoft YaHei", sans-serif; color: #000; background: transparent; }
+a { color: #003399; text-decoration: none; }
+a:hover { color: #ff6600; text-decoration: underline; }
+#wrap { width: 960px; max-width: calc(100% - 16px); margin: 0 auto; background: #fff; border: 1px solid #6b8ab8; padding: 6px; box-shadow: 3px 3px 0 #8ea3c4; }
+
+.top { width: 100%; border-collapse: collapse; background: linear-gradient(#ffffff, #dfe9f7); border: 1px solid #a9bcdb; }
+.top td { padding: 8px 12px; vertical-align: middle; }
+.logo a { text-decoration: none; display: inline-block; }
+.logo-cn { display: block; font: bold 32px/1.1 "黑体", SimHei, "Microsoft YaHei", sans-serif; letter-spacing: 4px;
+  background: linear-gradient(#ff9900, #ff3300); -webkit-background-clip: text; background-clip: text; color: transparent;
+  text-shadow: 2px 2px 0 rgba(0, 51, 153, .18); }
+.logo-en { display: block; font: bold 11px Arial, sans-serif; letter-spacing: 6px; color: #3a5a98; }
+.slogan { color: #6688bb; font-size: 11px; font-style: italic; }
+.banner { text-align: right; }
+.ad { display: inline-block; border: 2px ridge #ffcc00; background: #fffbe0; padding: 6px 14px; color: #993300; text-align: center; font-size: 12px; }
+.blink { color: #ff0000; font-weight: bold; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { visibility: hidden; } }
+
+.nav { margin-top: 4px; background: linear-gradient(#5f86c6, #2f5597); border: 1px solid #1f3f7a; padding: 0 4px; white-space: nowrap; overflow-x: auto; }
+.nav a { display: inline-block; color: #fff; padding: 5px 12px; font-weight: bold; border-right: 1px solid #6f93cc; }
+.nav a:hover { background: #ffcc33; color: #1f3f7a; text-decoration: none; }
+
+.userbar { width: 100%; border-collapse: collapse; background: #eef3fb; border: 1px solid #a9bcdb; border-top: 0; }
+.userbar td { padding: 4px 8px; }
+.userbar .r { text-align: right; color: #666; white-space: nowrap; }
+.admin-tag { color: #cc0000; font-weight: bold; }
+form.inline { display: inline; margin: 0; }
+.linkbtn { background: none; border: 0; padding: 0; color: #003399; font: inherit; cursor: pointer; }
+.linkbtn:hover { color: #ff6600; text-decoration: underline; }
+
+.marquee-box { margin: 6px 0; border: 1px dashed #ff9900; background: #fffff0; padding: 3px 8px; display: flex; gap: 6px; color: #cc3300; }
+.marquee-box marquee { flex: 1; color: #333; }
+.crumbs { margin: 6px 0; padding: 4px 8px; background: #f7f9fd; border: 1px solid #d4dff0; }
+.flash { margin: 6px 0; padding: 6px 10px; background: #e8ffe0; border: 1px solid #66bb44; color: #226600; font-weight: bold; }
+.err { margin: 0 0 8px; padding: 6px 10px; background: #fff0f0; border: 1px solid #dd6666; color: #cc0000; font-weight: bold; }
+
+.tbl { width: 100%; background: #6b8ab8; margin: 8px 0; border-collapse: separate; }
+.tbl td, .tbl th { padding: 5px 7px; vertical-align: middle; }
+.tbl th.cap { background: linear-gradient(#6d93d1, #3a62a8); color: #fff; text-align: left; font-size: 12px; letter-spacing: 1px; }
+.cap-desc { font-weight: normal; color: #dfe9ff; font-size: 11px; letter-spacing: 0; }
+.tbl tr.sub td { background: #d5e1f4; color: #1f3f7a; font-weight: bold; }
+.tbl td.cat { background: #eaf0fa; color: #c60; font-weight: bold; }
+.row1, .tbl tr.row1 td { background: #ffffff; }
+.row2, .tbl tr.row2 td { background: #f1f5fb; }
+.tbl.narrow { width: 640px; max-width: 100%; margin: 16px auto; }
+.tbl.two td { vertical-align: top; }
+.icon { text-align: center; font-size: 20px; width: 40px; }
+.bname { font-weight: bold; font-size: 13px; }
+.bdesc { color: #666; font-size: 11px; }
+.ttitle { font-size: 12px; }
+.small { font-size: 11px; }
+.gray { color: #888; }
+.red { color: #cc0000; }
+.list { line-height: 1.9; }
+.new { background: #ff3300; color: #fff; font: bold 9px Arial, sans-serif; padding: 0 3px; border-radius: 2px; animation: blink 1.2s steps(1) infinite; }
+.legend { color: #666; font-size: 11px; text-align: center; margin: 4px 0 8px; }
+.on { color: #22aa22; } .off { color: #999; }
+a.adm { color: #cc0000; font-weight: bold; }
+.stars { color: #ff9900; letter-spacing: -1px; }
+
+.actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 6px 0; }
+.pager { margin-left: auto; }
+.pager a, .pager b { padding: 0 1px; }
+.pager .cur { color: #cc0000; }
+
+.btn, button, input[type=submit] { font: 12px Verdana, "宋体", sans-serif; padding: 2px 10px; background: linear-gradient(#ffffff, #d9e3f2); border: 2px outset #c9d6ea; color: #000; cursor: pointer; }
+button:active, .btn:active { border-style: inset; }
+a.btn { display: inline-block; text-decoration: none; color: #1f3f7a; font-weight: bold; padding: 3px 12px; }
+a.btn:hover { color: #ff6600; }
+input[type=text], input:not([type]), input[type=password], textarea, select { font: 12px Verdana, "宋体", sans-serif; border: 1px solid #7f9db9; padding: 2px 3px; background: #fff; max-width: 100%; }
+textarea { width: 100%; }
+input:focus, textarea:focus { background: #ffffee; outline: 1px solid #ff9900; }
+
+.form { border-collapse: collapse; width: 100%; }
+.form td { padding: 5px; vertical-align: top; background: transparent; }
+.form td.lbl { width: 100px; text-align: right; font-weight: bold; color: #1f3f7a; white-space: nowrap; padding-top: 7px; }
+.avatars label { display: inline-block; margin: 0 6px 4px 0; cursor: pointer; }
+.avatars span { font-size: 20px; }
+.msg { text-align: center; padding: 8px; }
+
+/* 帖子 */
+td.author { width: 170px; background: #e6eef9; vertical-align: top; text-align: center; padding: 10px 6px; border-right: 1px dashed #a9bcdb; }
+.uname { font-weight: bold; font-size: 13px; color: #003399; }
+.avatar { width: 80px; height: 80px; margin: 6px auto; font-size: 50px; line-height: 76px; background: linear-gradient(#fff, #dde7f5); border: 2px ridge #b5c7e3; }
+.avatar.big { width: 110px; height: 110px; font-size: 72px; line-height: 104px; }
+.rank { color: #c60; font-size: 11px; }
+.meta { text-align: left; font-size: 11px; color: #555; margin: 6px 8px 0; line-height: 1.7; }
+td.postbody { vertical-align: top; padding: 0; }
+.post-h { display: flex; justify-content: space-between; padding: 4px 8px; border-bottom: 1px dotted #a9bcdb; font-size: 11px; }
+.floor { color: #cc3300; font-weight: bold; }
+.content { padding: 12px 10px; min-height: 90px; font-size: 13px; line-height: 1.8; word-wrap: break-word; overflow-wrap: anywhere; }
+.edited { padding: 0 10px; color: #999; font-size: 11px; font-style: italic; }
+.sig { margin: 10px 10px 0; padding-top: 6px; border-top: 1px dashed #c3d2e8; color: #666; font-size: 11px; max-height: 120px; overflow: hidden; }
+.sig::before { content: "———————— 个性签名 ————————"; display: block; color: #aab; font-size: 10px; }
+.post-f { text-align: right; padding: 4px 8px; font-size: 11px; border-top: 1px dotted #d4dff0; margin-top: 8px; }
+.post-f a, .post-f .linkbtn { margin-left: 4px; font-size: 11px; }
+.quote { margin: 6px 0; padding: 6px 10px; background: #f8f8e8; border: 1px dashed #c8c890; color: #555; font-size: 12px; }
+.quote-h { color: #996600; font-size: 11px; margin-bottom: 2px; }
+.code { margin: 6px 0; padding: 8px; background: #000; color: #33ff33; font: 12px/1.5 "Courier New", monospace; border: 2px inset #999; overflow-x: auto; white-space: pre; }
+.ubb-img { max-width: 100%; border: 1px solid #ccc; }
+.smile { font-size: 16px; }
+.sz1 { font-size: 10px; } .sz2 { font-size: 12px; } .sz3 { font-size: 15px; } .sz4 { font-size: 19px; } .sz5 { font-size: 25px; font-weight: bold; }
+.mod { margin: 6px 0; padding: 6px 8px; background: #fff7e6; border: 1px solid #ffcc66; }
+
+.ubb-bar { background: #eef3fb; border: 1px solid #a9bcdb; border-bottom: 0; padding: 3px; display: flex; flex-wrap: wrap; gap: 2px; align-items: center; }
+.ubb-bar button { padding: 0 6px; min-width: 24px; }
+.smilies { margin-left: 6px; }
+.smilies a { font-size: 16px; padding: 0 1px; }
+.smilies a:hover { text-decoration: none; background: #ffcc33; }
+.formbtns { margin-top: 6px; }
+.help h3 { color: #1f3f7a; border-bottom: 1px solid #a9bcdb; margin: 12px 0 6px; font-size: 13px; }
+.help code { font-family: "Courier New", monospace; color: #993300; }
+.profile-av b { font-size: 14px; }
+
+.footer { margin-top: 12px; padding: 10px; text-align: center; border-top: 3px double #6b8ab8; color: #666; font-size: 11px; line-height: 1.9; }
+.counter span { display: inline-block; background: #000; color: #33ff33; font: bold 13px "Courier New", monospace; padding: 0 3px; margin: 0 1px; border: 1px inset #666; }
+
+@media (max-width: 700px) {
+  #wrap { padding: 3px; }
+  .banner, .userbar .r { display: none; }
+  .logo-cn { font-size: 24px; }
+  td.author { width: 90px; padding: 6px 3px; }
+  .avatar { width: 50px; height: 50px; font-size: 30px; line-height: 46px; }
+  .meta, .rank br, .stars { display: none; }
+  .tbl td, .tbl th { padding: 4px; }
+  .form td.lbl { width: 70px; white-space: normal; }
+}

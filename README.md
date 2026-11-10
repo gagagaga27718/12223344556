@@ -5,6 +5,8 @@ Live site: <https://gagagaga27718.github.io/12223344556/> (GitHub Pages, deploys
 StudyLoop is a static, dependency-free learning platform (vanilla JS, no build step). Everything a student
 does is stored in their own browser; there is no backend and no account system.
 
+> 另外：`forum/` 目录里是一个独立的千禧年风格论坛（需要服务器运行，带账号登录），见 [forum/README.md](forum/README.md)。
+
 ## Features
 
 | Area | What it does |

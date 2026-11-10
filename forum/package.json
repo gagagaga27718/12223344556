@@ -1,0 +1,13 @@
+{
+  "name": "millennium-bbs",
+  "version": "1.0.0",
+  "description": "千禧年风格的老式论坛：账号注册登录、版块、发帖回帖、UBB 代码",
+  "main": "server.js",
+  "private": true,
+  "scripts": {
+    "start": "node --no-warnings=ExperimentalWarning server.js"
+  },
+  "engines": {
+    "node": ">=22.13"
+  }
+}

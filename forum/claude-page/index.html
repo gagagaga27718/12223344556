@@ -1,0 +1,824 @@
+<title>千禧论坛</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: one centered 960px "portal" box on a checkered desktop, table-based like a 2000-era BBS. Single deliberate light look. */
+:root {
+  color-scheme: light;
+  --desk: #c9d6e8; --desk2: #bfcde2;
+  --paper: #ffffff; --row: #f1f5fb; --side: #e6eef9;
+  --line: #6b8ab8; --line-soft: #a9bcdb; --line-faint: #d4dff0;
+  --head1: #6d93d1; --head2: #3a62a8; --nav1: #5f86c6; --nav2: #2f5597; --navy: #1f3f7a;
+  --ink: #111111; --muted: #777777; --link: #003399; --hover: #ff6600;
+  --hot: #cc3300; --red: #cc0000; --gold: #ff9900; --on: #229922;
+  --note-bg: #fffbe0; --note-line: #ffcc00; --ok-bg: #e8ffe0; --ok-line: #66bb44; --ok-ink: #226600;
+  --err-bg: #fff0f0; --err-line: #dd6666; --quote-bg: #f8f8e8; --quote-line: #c8c890;
+  --term-bg: #000000; --term-ink: #33ff33;
+  --f-body: Verdana, Tahoma, "PingFang SC", "Microsoft YaHei", SimSun, sans-serif;
+  --f-logo: "STHeiti", "Heiti SC", SimHei, "PingFang SC", "Microsoft YaHei", sans-serif;
+  --f-mono: "Courier New", Menlo, monospace;
+}
+* { box-sizing: border-box; }
+html { background: var(--desk); }
+body {
+  margin: 0; color: var(--ink); font: 12px/1.6 var(--f-body);
+  background-color: var(--desk);
+  background-image: linear-gradient(45deg, var(--desk2) 25%, transparent 25%, transparent 75%, var(--desk2) 75%), linear-gradient(45deg, var(--desk2) 25%, transparent 25%, transparent 75%, var(--desk2) 75%);
+  background-size: 8px 8px; background-position: 0 0, 4px 4px;
+  padding-block: 10px 24px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+a { color: var(--link); text-decoration: none; cursor: pointer; }
+a:hover { color: var(--hover); text-decoration: underline; }
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+#wrap { max-width: 960px; margin: 0 auto; background: var(--paper); border: 1px solid var(--line); padding: 6px; box-shadow: 3px 3px 0 #8ea3c4; }
+
+.top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 8px 12px; background: linear-gradient(var(--paper), #dfe9f7); border: 1px solid var(--line-soft); }
+.logo-cn { display: block; font: bold 32px/1.1 var(--f-logo); letter-spacing: 4px; color: #ff6a00; text-shadow: 2px 2px 0 rgba(0,51,153,.18); }
+.logo-en { display: block; font: bold 11px Arial, sans-serif; letter-spacing: 6px; color: var(--head2); }
+.slogan { color: #6688bb; font-size: 11px; font-style: italic; }
+.ad { border: 2px ridge var(--note-line); background: var(--note-bg); padding: 6px 14px; color: #993300; text-align: center; }
+.blink { color: var(--red); font-weight: bold; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { visibility: hidden; } }
+@media (prefers-reduced-motion: reduce) { .blink, .new { animation: none; } }
+
+.nav { margin-top: 4px; background: linear-gradient(var(--nav1), var(--nav2)); border: 1px solid var(--navy); display: flex; flex-wrap: wrap; }
+.nav a { color: #fff; padding: 5px 12px; font-weight: bold; border-right: 1px solid #6f93cc; }
+.nav a:hover { background: #ffcc33; color: var(--navy); text-decoration: none; }
+.userbar { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; padding: 4px 8px; background: #eef3fb; border: 1px solid var(--line-soft); border-top: 0; }
+.muted, .gray { color: var(--muted); }
+.marquee-box { margin: 6px 0; border: 1px dashed var(--gold); background: #fffff0; padding: 3px 8px; display: flex; gap: 6px; color: var(--hot); }
+.marquee-box marquee { flex: 1; min-width: 0; color: #333; }
+.crumbs { margin: 6px 0; padding: 4px 8px; background: #f7f9fd; border: 1px solid var(--line-faint); overflow-wrap: anywhere; }
+.flash { margin: 6px 0; padding: 6px 10px; background: var(--ok-bg); border: 1px solid var(--ok-line); color: var(--ok-ink); font-weight: bold; }
+.err { margin: 6px 0; padding: 6px 10px; background: var(--err-bg); border: 1px solid var(--err-line); color: var(--red); font-weight: bold; }
+
+.tblwrap { overflow-x: auto; margin: 8px 0; }
+.tbl { width: 100%; background: var(--line); border-spacing: 1px; }
+.tbl td, .tbl th { padding: 5px 7px; vertical-align: middle; }
+.tbl th.cap { background: linear-gradient(var(--head1), var(--head2)); color: #fff; text-align: left; letter-spacing: 1px; }
+.cap-desc { font-weight: normal; color: #dfe9ff; font-size: 11px; letter-spacing: 0; }
+.tbl tr.sub td { background: #d5e1f4; color: var(--navy); font-weight: bold; }
+.tbl td.cat { background: #eaf0fa; color: #cc6600; font-weight: bold; }
+.row1 { background: var(--paper); } .row2 { background: var(--row); }
+.tbl.two td { vertical-align: top; width: 50%; }
+.icon { text-align: center; font-size: 20px; width: 40px; }
+.bname { font-weight: bold; font-size: 13px; }
+.bdesc { color: #666; font-size: 11px; }
+.small { font-size: 11px; } .c { text-align: center; } .red { color: var(--red); }
+.list { line-height: 1.9; }
+.num { font-variant-numeric: tabular-nums; }
+.new { background: #ff3300; color: #fff; font: bold 9px Arial, sans-serif; padding: 0 3px; border-radius: 2px; animation: blink 1.2s steps(1) infinite; vertical-align: 1px; }
+.legend { color: #666; font-size: 11px; text-align: center; margin: 4px 0 8px; }
+.on { color: var(--on); } .off { color: #999; }
+.adm { color: var(--red); font-weight: bold; }
+.stars { color: var(--gold); letter-spacing: -1px; }
+.actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 6px 0; }
+.pager { margin-left: auto; }
+.pager .cur { color: var(--red); font-weight: bold; }
+
+button, .btn { font: 12px var(--f-body); padding: 2px 10px; background: linear-gradient(#ffffff, #d9e3f2); border: 2px outset #c9d6ea; color: #000; cursor: pointer; }
+button:active, .btn:active { border-style: inset; }
+a.btn { display: inline-block; text-decoration: none; color: var(--navy); font-weight: bold; padding: 3px 12px; }
+a.btn:hover { color: var(--hover); }
+button[disabled] { color: #999; cursor: default; }
+input, textarea, select { font: 12px var(--f-body); border: 1px solid #7f9db9; padding: 3px 4px; background: #fff; color: var(--ink); max-width: 100%; }
+input:focus, textarea:focus { background: #ffffee; }
+textarea { width: 100%; font-size: 14px; }
+.linkbtn { background: none; border: 0; padding: 0; color: var(--link); font: inherit; cursor: pointer; }
+.linkbtn:hover { color: var(--hover); text-decoration: underline; }
+.linkbtn.armed { color: var(--red); font-weight: bold; }
+
+.form { width: 100%; border-collapse: collapse; }
+.form td { padding: 5px; vertical-align: top; }
+.form td.lbl { width: 100px; text-align: right; font-weight: bold; color: var(--navy); white-space: nowrap; padding-top: 8px; }
+.avatars { display: flex; flex-wrap: wrap; gap: 4px 8px; }
+.avatars label { cursor: pointer; font-size: 20px; }
+.msg { text-align: center; padding: 10px; }
+
+td.author { width: 170px; background: var(--side); vertical-align: top; text-align: center; padding: 10px 6px; border-right: 1px dashed var(--line-soft); }
+.uname { font-weight: bold; font-size: 13px; overflow-wrap: anywhere; }
+.avatar { width: 80px; height: 80px; margin: 6px auto; font-size: 50px; line-height: 76px; background: linear-gradient(#fff, #dde7f5); border: 2px ridge #b5c7e3; }
+.avatar.big { width: 110px; height: 110px; font-size: 72px; line-height: 104px; }
+.rank { color: #cc6600; font-size: 11px; }
+.meta { text-align: left; font-size: 11px; color: #555; margin: 6px 8px 0; line-height: 1.7; }
+td.postbody { vertical-align: top; padding: 0; }
+.post-h { display: flex; justify-content: space-between; gap: 8px; padding: 4px 8px; border-bottom: 1px dotted var(--line-soft); font-size: 11px; }
+.floor { color: var(--hot); font-weight: bold; white-space: nowrap; }
+.content { padding: 12px 10px; min-height: 90px; font-size: 13px; line-height: 1.8; overflow-wrap: anywhere; }
+.edited { padding: 0 10px; color: #999; font-size: 11px; font-style: italic; }
+.sig { margin: 10px 10px 0; padding-top: 6px; border-top: 1px dashed #c3d2e8; color: #666; font-size: 11px; max-height: 120px; overflow: hidden; }
+.sig::before { content: "———————— 个性签名 ————————"; display: block; color: #aab; font-size: 10px; }
+.post-f { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 6px; padding: 4px 8px; font-size: 11px; border-top: 1px dotted var(--line-faint); margin-top: 8px; }
+.quote { margin: 6px 0; padding: 6px 10px; background: var(--quote-bg); border: 1px dashed var(--quote-line); color: #555; font-size: 12px; }
+.quote-h { color: #996600; font-size: 11px; margin-bottom: 2px; }
+.code { margin: 6px 0; padding: 8px; background: var(--term-bg); color: var(--term-ink); font: 12px/1.5 var(--f-mono); border: 2px inset #999; overflow-x: auto; white-space: pre; }
+.smile { font-size: 16px; }
+.sz1 { font-size: 10px; } .sz2 { font-size: 12px; } .sz3 { font-size: 15px; } .sz4 { font-size: 19px; } .sz5 { font-size: 25px; font-weight: bold; }
+.mod { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 6px 0; padding: 6px 8px; background: #fff7e6; border: 1px solid #ffcc66; }
+.ubb-bar { background: #eef3fb; border: 1px solid var(--line-soft); border-bottom: 0; padding: 3px; display: flex; flex-wrap: wrap; gap: 2px; align-items: center; }
+.ubb-bar button { padding: 0 6px; min-width: 26px; }
+.smilies a { font-size: 17px; padding: 0 1px; }
+.smilies a:hover { text-decoration: none; background: #ffcc33; }
+.help h3 { color: var(--navy); border-bottom: 1px solid var(--line-soft); margin: 12px 0 6px; font-size: 13px; }
+.help code { font-family: var(--f-mono); color: #993300; }
+.footer { margin-top: 12px; padding: 10px; text-align: center; border-top: 3px double var(--line); color: #666; font-size: 11px; line-height: 1.9; }
+.counter span { display: inline-block; background: var(--term-bg); color: var(--term-ink); font: bold 13px var(--f-mono); padding: 0 3px; margin: 0 1px; border: 1px inset #666; }
+
+@media (max-width: 700px) {
+  #wrap { padding: 3px; }
+  .ad, .userbar .clock { display: none; }
+  .logo-cn { font-size: 24px; }
+  td.author { width: 84px; padding: 6px 3px; }
+  .avatar { width: 48px; height: 48px; font-size: 30px; line-height: 44px; }
+  .meta, .rank .stars, .hide-sm { display: none; }
+  .tbl td, .tbl th { padding: 4px; }
+  .form td.lbl { width: 64px; white-space: normal; }
+  .tbl.two tr { display: flex; flex-direction: column; }
+  .tbl.two td, .tbl.two th { width: auto; }
+}
+</style>
+
+<div id="wrap">
+  <div class="top">
+    <a href="#home" style="text-decoration:none"><span class="logo-cn">千禧论坛</span><span class="logo-en">MILLENNIUM BBS</span><span class="slogan">~ 网络让你我相聚 ~</span></a>
+    <div class="ad">★ 本站已开通 <b>56K</b> / <b>ISDN</b> / <b>ADSL</b> 快速通道 ★<br><span class="blink">热烈欢迎新会员注册！</span></div>
+  </div>
+  <div class="nav">
+    <a href="#home">🏠 论坛首页</a><a href="#new">✏️ 发表新帖</a><a href="#search">🔍 搜索</a><a href="#members">👥 会员列表</a><a href="#help">❓ 帮助</a><a href="#my">⚙️ 控制面板</a>
+  </div>
+  <div class="userbar"><span id="userbar">正在连接论坛服务器……</span><span class="clock muted" id="clock"></span></div>
+  <div class="marquee-box"><b>📢 公告：</b><marquee id="announce" scrollamount="3">欢迎光临千禧论坛！</marquee></div>
+  <div class="crumbs" id="crumbs">📍 <a href="#home">千禧论坛</a></div>
+  <div id="flash"></div>
+  <main id="main">
+    <div class="tblwrap"><table class="tbl"><tr><th class="cap">论坛版块</th></tr><tr><td class="row1 msg">正在拨号连接论坛服务器，请稍候……<br><span class="muted">（版块、帖子和会员会在连上之后出现在这里）</span></td></tr></table></div>
+  </main>
+  <div class="footer">
+    <div class="counter" id="counter">本站共有帖子 <span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span> 篇</div>
+    Powered by <b>MillenniumBBS</b> v1.0 &copy; 2000-2026 千禧论坛<br>
+    建议使用 IE 5.0 以上版本、800×600 以上分辨率浏览本站 ｜ <a href="#help">论坛规则</a>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var PER_PAGE = 20, BOARD_PAGE = 30;
+  var AVATARS = ['🙂','😎','🤓','😺','🐶','🐧','🐼','🦊','🐸','🐵','👾','🤖','👻','🎃','🌻','🍉','⚽','🎸','🚀','💾'];
+  var SMILIES = { ':)': '😊', ':-)': '😊', ':(': '😞', ':D': '😄', ';)': '😉', ':P': '😛', ':o': '😮', ":'(": '😢', '8)': '😎', ':@': '😡', '^_^': '😊', '-_-': '😑', 'orz': '🙇' };
+  var COLORS = ['red','blue','green','orange','purple','gray','navy','maroon','teal','olive','fuchsia','black'];
+
+  var S = {
+    db: null, user: null, room: null, myId: null, isAdmin: false, isOwner: false, canWrite: null, writeRefused: false,
+    config: null, members: {}, cfgLoaded: false, memLoaded: false, timedOut: false, unavailable: '',
+    names: {}, peers: [], flash: '', flashErr: false, searchQ: '', editing: null, draft: {}
+  };
+  var M = { threads: {}, list: [], counts: {}, total: 0 };
+
+  // ---------- helpers ----------
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function str(v, max) { return typeof v === 'string' ? v.slice(0, max) : ''; }
+  function num(v) { return typeof v === 'number' && isFinite(v) ? v : 0; }
+  function isObj(v) { return v && typeof v === 'object' && !Array.isArray(v); }
+  function rid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+  function okId(s) { return typeof s === 'string' && /^[a-z0-9]{1,24}$/.test(s); }
+  function p2(n) { return String(n).padStart(2, '0'); }
+  function fmt(ms) { if (!ms) return '-'; var d = new Date(ms); return d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate()) + ' ' + p2(d.getHours()) + ':' + p2(d.getMinutes()); }
+  function day(ms) { return fmt(ms).slice(0, 10); }
+  function clip(s, n) { return s.length > n ? s.slice(0, n) + '…' : s; }
+  function box(title, inner) { return '<div class="tblwrap"><table class="tbl"><tr><th class="cap">' + title + '</th></tr><tr><td class="row1">' + inner + '</td></tr></table></div>'; }
+
+  function safeUrl(u) { var s = u.replace(/&amp;/g, '&').trim(); return /^https?:\/\/[^\s"<>]+$/i.test(s) ? esc(s) : null; }
+  function ubb(src) {
+    var s = esc(src).replace(/\r\n?/g, '\n');
+    var codes = [];
+    s = s.replace(/\[code\]([\s\S]*?)\[\/code\]/gi, function (_, c) { codes.push(c); return '\u0000' + (codes.length - 1) + '\u0000'; });
+    for (var i = 0; i < 3; i++) {
+      s = s.replace(/\[quote(?:=([^\]\n]{1,30}))?\]\n?([\s\S]*?)\[\/quote\]\n?/gi, function (_, who, body) {
+        return '<div class="quote"><div class="quote-h">' + (who ? '引用 <b>' + who + '</b> 的话：' : '引用：') + '</div>' + body + '</div>';
+      });
+    }
+    s = s.replace(/\[(b|i|u|s)\]([\s\S]*?)\[\/\1\]/gi, function (_, t, b) { t = t.toLowerCase(); return '<' + t + '>' + b + '</' + t + '>'; });
+    s = s.replace(/\[color=(#[0-9a-f]{3,6}|[a-z]+)\]([\s\S]*?)\[\/color\]/gi, function (m, c, b) { return (c.charAt(0) === '#' || COLORS.indexOf(c.toLowerCase()) >= 0) ? '<span style="color:' + c + '">' + b + '</span>' : b; });
+    s = s.replace(/\[size=([1-5])\]([\s\S]*?)\[\/size\]/gi, '<span class="sz$1">$2</span>');
+    s = s.replace(/\[center\]([\s\S]*?)\[\/center\]/gi, '<div style="text-align:center">$1</div>');
+    s = s.replace(/\[fly\]([\s\S]*?)\[\/fly\]/gi, '<marquee scrollamount="4">$1</marquee>');
+    s = s.replace(/\[url=([^\]\s]+)\]([\s\S]*?)\[\/url\]/gi, function (m, u, t) { var h = safeUrl(u); return h ? '<a href="' + h + '" target="_blank" rel="nofollow noopener noreferrer">' + t + '</a>' : t; });
+    s = s.replace(/\[url\]([^\[\s]+)\[\/url\]/gi, function (m, u) { var h = safeUrl(u); return h ? '<a href="' + h + '" target="_blank" rel="nofollow noopener noreferrer">' + h + '</a>' : u; });
+    s = s.replace(/\[img\]([^\[\s]+)\[\/img\]/gi, function (m, u) { var h = safeUrl(u); return h ? '<a href="' + h + '" target="_blank" rel="nofollow noopener noreferrer">[查看图片]</a>' : u; });
+    Object.keys(SMILIES).forEach(function (k) {
+      var re = new RegExp('(^|[\\s>])' + esc(k).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?=$|[\\s<])', 'g');
+      s = s.replace(re, '$1<span class="smile">' + SMILIES[k] + '</span>');
+    });
+    s = s.replace(/\n/g, '<br>');
+    return s.replace(/\u0000(\d+)\u0000/g, function (_, i) { return '<pre class="code">' + codes[Number(i)].replace(/^\n/, '') + '</pre>'; });
+  }
+
+  function rankOf(uid) {
+    if (S.config && S.config.ownerId === uid) return { t: '站长', s: '★★★★★★' };
+    var n = M.counts[uid] || 0;
+    var R = [[1000, '论坛元老', '★★★★★'], [300, '资深会员', '★★★★'], [100, '高级会员', '★★★'], [30, '中级会员', '★★'], [5, '初级会员', '★'], [0, '新手上路', '☆']];
+    for (var i = 0; i < R.length; i++) if (n >= R[i][0]) return { t: R[i][1], s: R[i][2] };
+  }
+  function member(uid) { return S.members[uid] || null; }
+  function nameOf(uid) {
+    var m = member(uid);
+    if (m && m.nick) return m.nick;
+    var p = S.names[uid];
+    return (p && p.name) || '网友';
+  }
+  function avatarOf(uid) { var m = member(uid); return (m && AVATARS.indexOf(m.avatar) >= 0) ? m.avatar : '🙂'; }
+  function isOnline(uid) { return S.peers.some(function (p) { return p.by === uid; }); }
+  function memberIndex(uid) { return memberOrder().indexOf(uid); }
+  function memberOrder() { return Object.keys(S.members).filter(function (u) { return S.members[u].nick; }).sort(function (a, b) { return num(S.members[a].joined) - num(S.members[b].joined); }); }
+  function userLink(uid) { var i = memberIndex(uid); var n = esc(nameOf(uid)); return i >= 0 ? '<a href="#member-' + (i + 1) + '">' + n + '</a>' : n; }
+  function boards() { return (S.config && Array.isArray(S.config.boards)) ? S.config.boards.filter(function (b) { return isObj(b) && okId(b.id); }) : []; }
+  function board(id) { return boards().filter(function (b) { return b.id === id; })[0] || null; }
+  function flag(name, tid) { return !!(S.config && isObj(S.config[name]) && S.config[name][tid] === true); }
+  function registered() { return !!(S.myId && member(S.myId) && member(S.myId).nick); }
+  function mayWrite() { return !!S.db && !!S.myId && S.canWrite !== false && !S.writeRefused; }
+
+  // ---------- derive the forum from member documents ----------
+  function derive() {
+    var threads = {}, counts = {}, total = 0;
+    Object.keys(S.members).forEach(function (uid) {
+      var m = S.members[uid];
+      var th = isObj(m.threads) ? m.threads : {};
+      Object.keys(th).forEach(function (tid) {
+        var t = th[tid];
+        if (!okId(tid) || !isObj(t)) return;
+        threads[tid] = { id: tid, uid: uid, board: str(t.b, 24), title: str(t.t, 80) || '(无标题)', body: str(t.body, 20000), c: num(t.c), e: num(t.e), replies: [] };
+      });
+    });
+    Object.keys(S.members).forEach(function (uid) {
+      var m = S.members[uid];
+      var rp = isObj(m.replies) ? m.replies : {};
+      Object.keys(rp).forEach(function (pid) {
+        var r = rp[pid];
+        if (!okId(pid) || !isObj(r) || !threads[r.tid]) return;
+        threads[r.tid].replies.push({ id: pid, uid: uid, body: str(r.body, 20000), c: num(r.c), e: num(r.e) });
+      });
+    });
+    var list = Object.keys(threads).map(function (k) {
+      var t = threads[k];
+      t.replies.sort(function (a, b) { return a.c - b.c || (a.id < b.id ? -1 : 1); });
+      var last = t.replies[t.replies.length - 1];
+      t.lastAt = last ? last.c : t.c; t.lastBy = last ? last.uid : t.uid;
+      t.pinned = flag('pinned', t.id); t.locked = flag('locked', t.id);
+      counts[t.uid] = (counts[t.uid] || 0) + 1; total++;
+      t.replies.forEach(function (r) { counts[r.uid] = (counts[r.uid] || 0) + 1; total++; });
+      return t;
+    });
+    list.sort(function (a, b) { return b.lastAt - a.lastAt; });
+    M = { threads: threads, list: list, counts: counts, total: total };
+  }
+
+  // ---------- writes ----------
+  var queue = Promise.resolve();
+  function clone(o) { return JSON.parse(JSON.stringify(o || {})); }
+  function writeMember(uid, mutate) {
+    var p = queue.then(function () {
+      var cur = clone(S.members[uid]);
+      mutate(cur);
+      if (JSON.stringify(cur).length > 240000) { var e = new Error('too_big'); e.code = 'too_big'; throw e; }
+      return S.db.doc('members/' + uid).set(cur);
+    });
+    queue = p.catch(function () {});
+    return p.catch(function (e) { onWriteError(e); throw e; });
+  }
+  function writeConfig(patch) {
+    var p = queue.then(function () { return S.db.doc('site/config').update(patch); });
+    queue = p.catch(function () {});
+    return p.catch(function (e) { onWriteError(e); throw e; });
+  }
+  function onWriteError(e) {
+    var code = e && e.code;
+    if (code === 'too_big') flash('你发的帖子总量已经接近个人存储上限了，删掉一些旧帖再试吧。', true);
+    else if (code === 'invalid_argument') { S.writeRefused = true; flash('你在这个论坛只有浏览权限，不能发帖。请让站长在分享设置里把你设为可以参与（Contributor）或编辑者。', true); }
+    else if (code === 'quota_exceeded') flash('论坛的存储空间满了，请联系站长清理。', true);
+    else flash('网络开小差了，没有保存成功，请稍后再试。', true);
+  }
+  function flash(msg, isErr) { S.flash = msg; S.flashErr = !!isErr; S.flashAt = Date.now(); paintFlash(); }
+  function paintFlash() {
+    var el = document.getElementById('flash');
+    el.innerHTML = S.flash ? '<div class="' + (S.flashErr ? 'err' : 'flash') + '">' + (S.flashErr ? '⚠️ ' : '') + esc(S.flash) + '</div>' : '';
+  }
+
+  // ---------- routing ----------
+  function route() {
+    var h = (location.hash || '').replace(/^#/, '');
+    var m;
+    if ((m = h.match(/^board-([a-z0-9]+)(?:-(\d+))?$/))) return { v: 'board', id: m[1], page: Number(m[2]) || 1 };
+    if ((m = h.match(/^thread-([a-z0-9]+)(?:-(\d+|last))?$/))) return { v: 'thread', id: m[1], page: m[2] || '1' };
+    if ((m = h.match(/^new(?:-([a-z0-9]+))?$/))) return { v: 'new', board: m[1] || '' };
+    if ((m = h.match(/^member-(\d+)$/))) return { v: 'member', n: Number(m[1]) };
+    if ((m = h.match(/^members(?:-(\d+))?$/))) return { v: 'members', page: Number(m[1]) || 1 };
+    if (['search', 'help', 'my', 'register'].indexOf(h) >= 0) return { v: h };
+    return { v: 'home' };
+  }
+  function go(hash) { if (location.hash === '#' + hash) render(true); else location.hash = hash; }
+
+  function pager(base, page, pages) {
+    if (pages <= 1) return '';
+    var out = '<span class="pager">共 ' + pages + ' 页：';
+    for (var p = 1; p <= pages; p++) {
+      if (pages > 12 && p > 3 && p < pages - 2 && Math.abs(p - page) > 2) { if (!/… $/.test(out)) out += '… '; continue; }
+      out += p === page ? '<span class="cur">[' + p + ']</span> ' : '<a href="#' + base + '-' + p + '">[' + p + ']</a> ';
+    }
+    return out + '</span>';
+  }
+
+  // ---------- render ----------
+  var renderedIds = '', pending = false;
+  document.addEventListener('focusout', function () { setTimeout(function () { if (pending) paint(); }, 0); });
+  function render(force) {
+    var ids = Object.keys(S.members);
+    S.peers.forEach(function (p) { if (p.by && ids.indexOf(p.by) < 0) ids.push(p.by); });
+    if (S.myId && ids.indexOf(S.myId) < 0) ids.push(S.myId);
+    var key = ids.join(',');
+    if (S.user && ids.length && key !== renderedIds) {
+      renderedIds = key;
+      S.user.profiles(ids).then(function (ps) { S.names = ps || {}; paint(); });
+    }
+    paint(force);
+  }
+
+  function paint(force) {
+    var r = route();
+    document.getElementById('announce').textContent = (S.config && str(S.config.announcement, 300)) || '欢迎光临千禧论坛！请文明发帖，共建和谐社区 ★ 第一次来请先到控制面板注册论坛昵称';
+    var digits = String(M.total).padStart(6, '0').split('').map(function (d) { return '<span>' + d + '</span>'; }).join('');
+    document.getElementById('counter').innerHTML = '本站共有帖子 ' + digits + ' 篇';
+    paintUserbar();
+    var main = document.getElementById('main');
+    var crumbs = [];
+    var html;
+    if (!S.db) {
+      html = box('提示信息', '<p class="msg">' + (S.unavailable || '正在拨号连接论坛服务器，请稍候……') + '</p>');
+    } else if (!S.cfgLoaded || !S.memLoaded) {
+      html = box('提示信息', '<p class="msg">' + (S.timedOut ? '论坛服务器暂时连不上，可能是网络不太好。稍等一会儿它会自己重连。' : '正在读取帖子数据，请稍候……') + '</p>');
+    } else {
+      var out = VIEWS[r.v](r);
+      html = out.html; crumbs = out.crumbs || [];
+    }
+    // while the viewer is typing on this view, a live update waits until they leave the field
+    var f = document.activeElement;
+    var typing = f && main.contains(f) && /^(TEXTAREA|INPUT|SELECT)$/.test(f.tagName);
+    if (force || main.getAttribute('data-r') !== location.hash || !typing) { main.innerHTML = html; pending = false; } else pending = true;
+    main.setAttribute('data-r', location.hash);
+    restoreDrafts();
+    document.getElementById('crumbs').innerHTML = '📍 ' + ['<a href="#home">千禧论坛</a>'].concat(crumbs).join(' &raquo; ');
+  }
+
+  function paintUserbar() {
+    var el = document.getElementById('userbar');
+    if (!S.db) { el.textContent = S.unavailable ? '您好，游客！' : '正在连接论坛服务器……'; return; }
+    if (!S.myId) { el.innerHTML = '您好，<b>游客</b>！登录 claude.ai 后即可浏览和发帖'; return; }
+    if (!registered()) { el.innerHTML = '您好！您还没有论坛昵称，请先 <a href="#register"><b>注册成为会员</b></a>'; return; }
+    el.innerHTML = '欢迎您，' + userLink(S.myId) + (S.isOwner ? ' <span class="adm">[站长]</span>' : S.isAdmin ? ' <span class="adm">[版主]</span>' : '') +
+      ' ｜ <a href="#my">控制面板</a> ｜ 我的帖子：<b class="num">' + (M.counts[S.myId] || 0) + '</b>' + (mayWrite() ? '' : ' ｜ <span class="red">只读模式</span>');
+  }
+
+  function gateMsg() {
+    if (!S.myId) return '请先登录 claude.ai，才能在论坛发帖。';
+    if (!registered()) return '您还没有论坛昵称。请先 <a href="#register"><b>注册成为会员</b></a>，再来发帖吧！';
+    if (!mayWrite()) return '您目前只有浏览权限，不能发帖。<br>请让站长在这个页面的分享设置里，把您设为可以参与（Contributor）或编辑者（Editor）。';
+    return '';
+  }
+  function needLogin() { var g = gateMsg(); return g ? box('提示信息', '<p class="msg">' + g + '</p>') : ''; }
+
+  function editor(id, value, placeholder) {
+    var sm = [':)', ':D', ';)', ':P', ':(', ":'(", ':o', '8)', ':@', 'orz'];
+    return '<div class="ubb-bar" data-for="' + id + '">' +
+      '<button type="button" data-tag="b"><b>B</b></button><button type="button" data-tag="i"><i>I</i></button><button type="button" data-tag="u"><u>U</u></button><button type="button" data-tag="s"><s>S</s></button>' +
+      '<select data-tagsel="color" id="' + id + '-color" aria-label="颜色"><option value="">颜色</option>' + COLORS.slice(0, 8).map(function (c) { return '<option value="' + c + '" style="color:' + c + '">' + c + '</option>'; }).join('') + '</select>' +
+      '<select data-tagsel="size" id="' + id + '-size" aria-label="字号"><option value="">字号</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>' +
+      '<button type="button" data-tag="url">链接</button><button type="button" data-tag="quote">引用</button><button type="button" data-tag="code">代码</button><button type="button" data-tag="center">居中</button><button type="button" data-tag="fly">飞行字</button>' +
+      '<span class="smilies">' + sm.map(function (k) { return '<a data-smile="' + esc(k) + '" title="' + esc(k) + '">' + SMILIES[k] + '</a>'; }).join('') + '</span></div>' +
+      '<textarea id="' + id + '" rows="9" maxlength="10000" placeholder="' + esc(placeholder || '') + '">' + esc(value || '') + '</textarea>';
+  }
+  function restoreDrafts() {
+    Object.keys(S.draft).forEach(function (k) {
+      var i = k.indexOf('|'); if (k.slice(0, i) !== location.hash) return;
+      var el = document.getElementById(k.slice(i + 1)); if (el && !el.value && S.draft[k]) el.value = S.draft[k];
+    });
+  }
+
+  var VIEWS = {};
+
+  VIEWS.home = function () {
+    var bs = boards();
+    var h = '<div class="tblwrap"><table class="tbl"><tr><th class="cap" colspan="5">论坛版块</th></tr>' +
+      '<tr class="sub"><td></td><td>版块名称</td><td class="c hide-sm" width="60">主题</td><td class="c hide-sm" width="60">帖子</td><td width="210">最后发表</td></tr>';
+    var cat = null, now = Date.now();
+    if (!bs.length) h += '<tr><td class="row1 msg" colspan="5">论坛还在装修中，站长正在布置版块……</td></tr>';
+    bs.forEach(function (b) {
+      if (b.cat !== cat) { cat = b.cat; h += '<tr><td class="cat" colspan="5">▼ ' + esc(str(cat, 20)) + '</td></tr>'; }
+      var ts = M.list.filter(function (t) { return t.board === b.id; });
+      var posts = ts.reduce(function (n, t) { return n + 1 + t.replies.length; }, 0);
+      var lt = ts[0];
+      h += '<tr><td class="row2 icon">' + esc(str(b.icon, 4) || '📁') + '</td>' +
+        '<td class="row1"><a class="bname" href="#board-' + b.id + '">' + esc(str(b.name, 20)) + '</a>' + (lt && now - lt.lastAt < 864e5 ? ' <span class="new">NEW</span>' : '') + '<div class="bdesc">' + esc(str(b.desc, 80)) + '</div></td>' +
+        '<td class="row2 c num hide-sm">' + ts.length + '</td><td class="row1 c num hide-sm">' + posts + '</td>' +
+        '<td class="row2 small">' + (lt ? '<a href="#thread-' + lt.id + '-last">' + esc(clip(lt.title, 16)) + '</a><br>' + fmt(lt.lastAt) + ' by ' + userLink(lt.lastBy) : '<span class="muted">从未有人发帖</span>') + '</td></tr>';
+    });
+    h += '</table></div>';
+    var latest = M.list.slice().sort(function (a, b) { return b.c - a.c; }).slice(0, 8);
+    var hot = M.list.slice().sort(function (a, b) { return b.replies.length - a.replies.length || b.lastAt - a.lastAt; }).slice(0, 8);
+    h += '<div class="tblwrap"><table class="tbl two"><tr><th class="cap">🆕 最新主题</th><th class="cap">🔥 热门主题</th></tr><tr>' +
+      '<td class="row1 list">' + (latest.map(function (t) { var b = board(t.board); return '· <a href="#thread-' + t.id + '">' + esc(t.title) + '</a> <span class="muted">[' + esc(b ? b.name : '?') + '] by ' + esc(nameOf(t.uid)) + '</span>'; }).join('<br>') || '<span class="muted">还没有帖子，快去抢第一帖！</span>') + '</td>' +
+      '<td class="row1 list">' + (hot.map(function (t) { return '· <a href="#thread-' + t.id + '">' + esc(t.title) + '</a> <span class="muted">(' + t.replies.length + ' 回复)</span>'; }).join('<br>') || '<span class="muted">暂无</span>') + '</td></tr></table></div>';
+    var order = memberOrder(), newest = order[order.length - 1];
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    var todayN = 0; M.list.forEach(function (t) { if (t.c >= +today) todayN++; t.replies.forEach(function (r) { if (r.c >= +today) todayN++; }); });
+    var onlineIds = [], guests = 0, seen = {};
+    S.peers.forEach(function (p) { if (p.kind !== 'viewer') return; if (p.by && member(p.by) && member(p.by).nick) { if (!seen[p.by]) { seen[p.by] = 1; onlineIds.push(p.by); } } else guests++; });
+    h += '<div class="tblwrap"><table class="tbl"><tr><th class="cap">📊 论坛统计 &amp; 在线情况</th></tr><tr><td class="row1">' +
+      '共有会员 <b class="num">' + order.length + '</b> 人，主题 <b class="num">' + M.list.length + '</b> 篇，帖子 <b class="num">' + M.total + '</b> 篇，今日新帖 <b class="red num">' + todayN + '</b> 篇。' +
+      (newest ? ' 欢迎新会员 <b>' + userLink(newest) + '</b>！' : '') + '</td></tr><tr><td class="row2">' +
+      '目前在线 <b class="num">' + (onlineIds.length + guests) + '</b> 人（会员 ' + onlineIds.length + ' 人，游客 ' + guests + ' 人）：' +
+      (onlineIds.map(function (u) { var own = S.config && S.config.ownerId === u; return (own ? '👑' : '👤') + '<span class="' + (own ? 'adm' : '') + '">' + userLink(u) + '</span>'; }).join('　') || '<span class="muted">暂无会员在线</span>') +
+      '</td></tr></table></div>';
+    return { html: h };
+  };
+
+  VIEWS.board = function (r) {
+    var b = board(r.id);
+    if (!b) return notFound('版块');
+    var ts = M.list.filter(function (t) { return t.board === b.id; });
+    ts.sort(function (a, z) { return (z.pinned - a.pinned) || (z.lastAt - a.lastAt); });
+    var pages = Math.max(1, Math.ceil(ts.length / BOARD_PAGE)), page = Math.min(pages, r.page);
+    var rows = ts.slice((page - 1) * BOARD_PAGE, page * BOARD_PAGE), now = Date.now();
+    var bar = '<div class="actions"><a class="btn" href="#new-' + b.id + '">✏️ 发表新帖</a>' + pager('board-' + b.id, page, pages) + '</div>';
+    var h = bar + '<div class="tblwrap"><table class="tbl"><tr><th class="cap" colspan="5">' + esc(b.icon || '📁') + ' ' + esc(b.name) + ' <span class="cap-desc">— ' + esc(b.desc || '') + '</span></th></tr>' +
+      '<tr class="sub"><td></td><td>标题</td><td class="c hide-sm" width="110">作者</td><td class="c" width="80">回复</td><td class="hide-sm" width="160">最后发表</td></tr>';
+    rows.forEach(function (t) {
+      var icon = t.pinned ? '📌' : t.locked ? '🔒' : t.replies.length >= 15 ? '🔥' : now - t.lastAt < 864e5 ? '📂' : '📁';
+      var tp = Math.ceil((t.replies.length + 1) / PER_PAGE);
+      h += '<tr><td class="row2 icon">' + icon + '</td><td class="row1">' + (t.pinned ? '<b class="red">[置顶]</b> ' : '') +
+        '<a href="#thread-' + t.id + '">' + esc(t.title) + '</a>' + (now - t.c < 864e5 ? ' <span class="new">NEW</span>' : '') +
+        (tp > 1 ? ' <span class="muted small">[ 第 ' + Array.apply(null, Array(Math.min(tp, 5))).map(function (_, i) { return '<a href="#thread-' + t.id + '-' + (i + 1) + '">' + (i + 1) + '</a>'; }).join(' ') + (tp > 5 ? ' …' : '') + ' 页 ]</span>' : '') +
+        '</td>' +
+        '<td class="row2 c hide-sm">' + userLink(t.uid) + '<br><span class="small muted">' + day(t.c) + '</span></td>' +
+        '<td class="row1 c num"><b>' + t.replies.length + '</b></td>' +
+        '<td class="row2 small hide-sm"><a href="#thread-' + t.id + '-last">' + fmt(t.lastAt) + '</a><br>by ' + userLink(t.lastBy) + '</td></tr>';
+    });
+    if (!rows.length) h += '<tr><td class="row1 msg" colspan="5">本版块还没有帖子，快来<a href="#new-' + b.id + '">抢沙发</a>吧！</td></tr>';
+    h += '</table></div>' + bar + '<div class="legend">📂 有新回复 ｜ 📁 无新回复 ｜ 🔥 热门帖子 ｜ 📌 置顶帖子 ｜ 🔒 已锁定</div>';
+    return { html: h, crumbs: [esc(b.name)] };
+  };
+
+  function floorName(n) { return n === 1 ? '楼主' : n === 2 ? '沙发' : n === 3 ? '板凳' : n === 4 ? '地板' : n + ' 楼'; }
+  function authorCell(uid) {
+    var rk = rankOf(uid), m = member(uid) || {};
+    return '<td class="author"><span class="uname">' + userLink(uid) + '</span><div class="avatar">' + avatarOf(uid) + '</div>' +
+      '<div class="rank">' + rk.t + '<br><span class="stars">' + rk.s + '</span></div>' +
+      '<div class="meta">帖子：' + (M.counts[uid] || 0) + '<br>注册：' + day(num(m.joined)) + (m.loc ? '<br>来自：' + esc(str(m.loc, 30)) : '') +
+      '<br>状态：' + (isOnline(uid) ? '<span class="on">● 在线</span>' : '<span class="off">○ 离线</span>') + '</div></td>';
+  }
+
+  VIEWS.thread = function (r) {
+    var t = M.threads[r.id];
+    if (!t) return notFound('帖子');
+    var b = board(t.board);
+    var all = [{ id: t.id, uid: t.uid, body: t.body, c: t.c, e: t.e, first: true }].concat(t.replies);
+    var pages = Math.max(1, Math.ceil(all.length / PER_PAGE));
+    var page = r.page === 'last' ? pages : Math.min(pages, Math.max(1, Number(r.page) || 1));
+    var canMod = S.isAdmin && mayWrite();
+    var canReply = registered() && mayWrite() && (!t.locked || canMod);
+    var bar = '<div class="actions"><a class="btn" href="#new-' + t.board + '">✏️ 发表新帖</a>' + (canReply ? '<a class="btn" data-act="jump-reply">💬 回复帖子</a>' : '') + pager('thread-' + t.id, page, pages) + '</div>';
+    var h = bar + '<div class="tblwrap"><table class="tbl"><tr><th class="cap" colspan="2">' + (t.pinned ? '📌 ' : '') + (t.locked ? '🔒 ' : '') + esc(t.title) + ' <span class="cap-desc">（回复 ' + t.replies.length + ' 次）</span></th></tr>';
+    all.slice((page - 1) * PER_PAGE, page * PER_PAGE).forEach(function (p, i) {
+      var n = (page - 1) * PER_PAGE + i + 1;
+      var mine = registered() && mayWrite() && (p.uid === S.myId || canMod);
+      var sig = member(p.uid) ? str(member(p.uid).sig, 300) : '';
+      var editing = S.editing === p.id;
+      h += '<tr>' + authorCell(p.uid) + '<td class="postbody ' + (i % 2 ? 'row2' : 'row1') + '">' +
+        '<div class="post-h"><span class="muted">📝 发表于 ' + fmt(p.c) + '</span><span class="floor">' + floorName(n) + '</span></div>';
+      if (editing) {
+        h += '<div class="content">' + (p.first ? '<input id="edit-title" maxlength="80" style="width:100%;margin-bottom:6px" value="' + esc(t.title) + '">' : '') +
+          editor('edit-body', p.body) + '<div class="actions"><button data-act="save-edit" data-pid="' + p.id + '" data-uid="' + p.uid + '" data-first="' + (p.first ? 1 : 0) + '">保存修改</button><button data-act="cancel-edit">取消</button></div></div>';
+      } else {
+        h += '<div class="content">' + ubb(p.body) + '</div>' +
+          (p.e ? '<div class="edited">[ 本帖最后由 ' + esc(nameOf(p.uid)) + ' 于 ' + fmt(p.e) + ' 编辑 ]</div>' : '') +
+          (sig ? '<div class="sig">' + ubb(sig) + '</div>' : '');
+      }
+      h += '<div class="post-f">' + (canReply ? '<a data-act="quote" data-pid="' + p.id + '">[引用]</a>' : '') +
+        (mine && !editing ? '<a data-act="edit" data-pid="' + p.id + '">[编辑]</a>' : '') +
+        (mine && !p.first ? '<button class="linkbtn" data-act="del-reply" data-pid="' + p.id + '" data-uid="' + p.uid + '">[删除]</button>' : '') +
+        (memberIndex(p.uid) >= 0 ? '<a href="#member-' + (memberIndex(p.uid) + 1) + '">[资料]</a>' : '') + '</div></td></tr>';
+    });
+    h += '</table></div>' + '<div class="actions">' + pager('thread-' + t.id, page, pages) + '</div>';
+    if (registered() && mayWrite() && (canMod || t.uid === S.myId)) {
+      h += '<div class="mod">🛠 帖子管理：' +
+        (canMod ? '<button data-act="pin" data-tid="' + t.id + '">' + (t.pinned ? '取消置顶' : '置顶') + '</button><button data-act="lock" data-tid="' + t.id + '">' + (t.locked ? '解除锁定' : '锁定') + '</button>' : '') +
+        '<button data-act="del-thread" data-tid="' + t.id + '">删除主题</button></div>';
+    }
+    if (canReply) {
+      h += '<div id="replybox">' + box('💬 快速回复', editor('reply-body', '', '友善发言，灌水也要有诚意哦～') + '<div class="actions"><button data-act="reply" data-tid="' + t.id + '">发表回复</button><span class="muted small">（Ctrl+Enter 也可以提交）</span></div>') + '</div>';
+    } else if (t.locked && registered()) {
+      h += box('💬 快速回复', '<p class="msg">🔒 本主题已被锁定，不能回复。</p>');
+    } else {
+      h += box('💬 快速回复', '<p class="msg">' + gateMsg() + '</p>');
+    }
+    return { html: h, crumbs: [b ? '<a href="#board-' + b.id + '">' + esc(b.name) + '</a>' : '?', esc(clip(t.title, 30))] };
+  };
+
+  VIEWS['new'] = function (r) {
+    var gate = needLogin();
+    if (gate) return { html: gate, crumbs: ['发表新帖'] };
+    var opts = boards().map(function (b) { return '<option value="' + b.id + '"' + (b.id === r.board ? ' selected' : '') + '>' + esc(b.cat) + ' › ' + esc(b.name) + '</option>'; }).join('');
+    var h = box('✏️ 发表新帖', '<table class="form"><tr><td class="lbl">所属版块：</td><td><select id="new-board">' + opts + '</select></td></tr>' +
+      '<tr><td class="lbl">帖子标题：</td><td><input id="new-title" maxlength="80" style="width:100%"></td></tr>' +
+      '<tr><td class="lbl">帖子内容：</td><td>' + editor('new-body', '') + '</td></tr>' +
+      '<tr><td></td><td><button data-act="post-thread">发表帖子</button></td></tr></table>');
+    return { html: h, crumbs: ['发表新帖'] };
+  };
+
+  VIEWS.register = function () {
+    if (!S.myId) return { html: needLogin(), crumbs: ['注册'] };
+    if (registered()) return { html: box('提示信息', '<p class="msg">您已经是本站会员啦！<a href="#home">返回首页</a></p>'), crumbs: ['注册'] };
+    var suggest = (S.names[S.myId] && S.names[S.myId].name) || '';
+    var h = box('📝 注册新会员', '<p>欢迎来到千禧论坛！您用 Claude 账号登录，只需要再起一个<b>论坛昵称</b>就能发帖了。</p>' +
+      '<table class="form"><tr><td class="lbl">论坛昵称：</td><td><input id="reg-nick" maxlength="16" value="' + esc(suggest.slice(0, 16)) + '"> <span class="muted small">2～16 个字，中文、字母、数字、下划线</span></td></tr>' +
+      '<tr><td class="lbl">选择头像：</td><td class="avatars">' + AVATARS.map(function (a, i) { return '<label><input type="radio" name="reg-av" id="reg-av-' + i + '" value="' + a + '"' + (i === 1 ? ' checked' : '') + '>' + a + '</label>'; }).join('') + '</td></tr>' +
+      '<tr><td class="lbl">来自：</td><td><input id="reg-loc" maxlength="30" placeholder="比如：火星"></td></tr>' +
+      '<tr><td class="lbl">论坛规则：</td><td><label><input type="checkbox" id="reg-agree"> 我已阅读并同意 <a href="#help">论坛规则</a>，保证文明发帖</label></td></tr>' +
+      '<tr><td></td><td><button data-act="register">提交注册</button></td></tr></table>');
+    return { html: h, crumbs: ['注册'] };
+  };
+
+  function memberProfile(uid) {
+    var m = member(uid) || {}, rk = rankOf(uid);
+    var ts = M.list.filter(function (t) { return t.uid === uid; }).sort(function (a, b) { return b.c - a.c; }).slice(0, 15);
+    var rs = [];
+    M.list.forEach(function (t) { t.replies.forEach(function (r) { if (r.uid === uid) rs.push({ t: t, r: r }); }); });
+    rs.sort(function (a, b) { return b.r.c - a.r.c; });
+    return '<div class="tblwrap"><table class="tbl"><tr><th class="cap" colspan="2">👤 ' + esc(nameOf(uid)) + ' 的个人资料</th></tr>' +
+      '<tr><td class="row2 c" width="150"><div class="avatar big">' + avatarOf(uid) + '</div><b>' + esc(nameOf(uid)) + '</b><br>' + rk.t + '<br><span class="stars">' + rk.s + '</span></td>' +
+      '<td class="row1"><table class="form"><tr><td class="lbl">注册时间：</td><td>' + fmt(num(m.joined)) + '</td></tr>' +
+      '<tr><td class="lbl">发帖数：</td><td class="num">' + (M.counts[uid] || 0) + '</td></tr>' +
+      '<tr><td class="lbl">状态：</td><td>' + (isOnline(uid) ? '<span class="on">● 在线</span>' : '<span class="off">○ 离线</span>') + '</td></tr>' +
+      '<tr><td class="lbl">来自：</td><td>' + (m.loc ? esc(str(m.loc, 30)) : '<span class="muted">保密</span>') + '</td></tr>' +
+      '<tr><td class="lbl">个性签名：</td><td>' + (m.sig ? ubb(str(m.sig, 300)) : '<span class="muted">这家伙很懒，什么也没留下</span>') + '</td></tr></table></td></tr></table></div>' +
+      '<div class="tblwrap"><table class="tbl two"><tr><th class="cap">发表的主题</th><th class="cap">最近的回复</th></tr><tr>' +
+      '<td class="row1 list">' + (ts.map(function (t) { return '· <a href="#thread-' + t.id + '">' + esc(t.title) + '</a> <span class="muted">' + day(t.c) + '</span>'; }).join('<br>') || '<span class="muted">暂无</span>') + '</td>' +
+      '<td class="row1 list">' + (rs.slice(0, 15).map(function (x) { return '· <a href="#thread-' + x.t.id + '-last">' + esc(x.t.title) + '</a> <span class="muted">' + day(x.r.c) + '</span>'; }).join('<br>') || '<span class="muted">暂无</span>') + '</td></tr></table></div>';
+  }
+  VIEWS.member = function (r) {
+    var uid = memberOrder()[r.n - 1];
+    if (!uid) return notFound('会员');
+    return { html: memberProfile(uid), crumbs: ['<a href="#members">会员列表</a>', esc(nameOf(uid))] };
+  };
+
+  VIEWS.members = function (r) {
+    var order = memberOrder(), pages = Math.max(1, Math.ceil(order.length / 30)), page = Math.min(pages, r.page);
+    var h = '<div class="tblwrap"><table class="tbl"><tr><th class="cap" colspan="5">👥 会员列表（共 ' + order.length + ' 人）</th></tr>' +
+      '<tr class="sub"><td class="c" width="50">编号</td><td>昵称</td><td>等级</td><td class="c">发帖</td><td class="hide-sm">注册时间</td></tr>';
+    order.slice((page - 1) * 30, page * 30).forEach(function (u, i) {
+      var n = (page - 1) * 30 + i + 1, rk = rankOf(u);
+      h += '<tr class="' + (i % 2 ? 'row2' : 'row1') + '"><td class="c num">' + n + '</td><td>' + avatarOf(u) + ' ' + userLink(u) + (isOnline(u) ? ' <span class="on small">●</span>' : '') + '</td><td>' + rk.t + ' <span class="stars">' + rk.s + '</span></td><td class="c num">' + (M.counts[u] || 0) + '</td><td class="hide-sm">' + fmt(num(S.members[u].joined)) + '</td></tr>';
+    });
+    if (!order.length) h += '<tr><td class="row1 msg" colspan="5">还没有会员，<a href="#register">快来当第一个</a>！</td></tr>';
+    h += '</table></div><div class="actions">' + pager('members', page, pages) + '</div>';
+    return { html: h, crumbs: ['会员列表'] };
+  };
+
+  VIEWS.search = function () {
+    var q = S.searchQ.trim().toLowerCase();
+    var h = box('🔍 论坛搜索', '<div class="actions">关键字：<input id="search-q" maxlength="50" value="' + esc(S.searchQ) + '"><button data-act="search">搜 索</button><span class="muted small">搜索帖子标题和内容</span></div>');
+    if (q) {
+      var hits = [];
+      M.list.forEach(function (t) {
+        if (t.title.toLowerCase().indexOf(q) >= 0 || t.body.toLowerCase().indexOf(q) >= 0) hits.push({ t: t, uid: t.uid, body: t.body, c: t.c, page: 1 });
+        t.replies.forEach(function (r, i) { if (r.body.toLowerCase().indexOf(q) >= 0) hits.push({ t: t, uid: r.uid, body: r.body, c: r.c, page: Math.ceil((i + 2) / PER_PAGE) }); });
+      });
+      hits.sort(function (a, b) { return b.c - a.c; });
+      h += '<div class="tblwrap"><table class="tbl"><tr><th class="cap" colspan="3">搜索结果：找到 ' + hits.length + ' 条</th></tr>' +
+        (hits.slice(0, 50).map(function (x, i) { return '<tr class="' + (i % 2 ? 'row2' : 'row1') + '"><td><a href="#thread-' + x.t.id + '-' + x.page + '"><b>' + esc(x.t.title) + '</b></a><div class="small muted">' + esc(clip(x.body.replace(/\[[^\]]*\]/g, ''), 100)) + '</div></td><td width="100">' + userLink(x.uid) + '</td><td class="small hide-sm" width="120">' + fmt(x.c) + '</td></tr>'; }).join('') || '<tr><td class="row1 msg">没有找到相关帖子。</td></tr>') + '</table></div>';
+    }
+    return { html: h, crumbs: ['搜索'] };
+  };
+
+  VIEWS.help = function () {
+    var ex = ['[b]粗体[/b]', '[i]斜体[/i]', '[u]下划线[/u]', '[s]删除线[/s]', '[color=red]红色文字[/color]', '[size=4]大号字[/size]', '[url=https://example.com]超链接[/url]', '[quote=网友]引用内容[/quote]', '[code]print("hello")[/code]', '[center]居中[/center]', '[fly]飞来飞去的字[/fly]', ":) :D ;) :P :( :'( :o 8) :@ orz ^_^"];
+    var h = box('❓ 论坛帮助 &amp; 规则', '<div class="help"><h3>📜 论坛规则</h3><ol><li>遵守法律法规，不发布违法、色情、暴力内容。</li><li>文明发言，不人身攻击，不恶意灌水刷屏。</li><li>不发布广告和垃圾信息，违者删帖处理。</li><li>尊重他人隐私，不随意公开他人信息。</li><li>站长和版主有权删除违规帖子、锁定主题。</li></ol>' +
+      '<h3>🔑 怎么注册登录</h3><p>本论坛用你的 Claude 账号登录，不需要另外设密码。第一次来的时候，到 <a href="#register">注册</a> 页面起一个论坛昵称就行。能不能发帖由站长在分享设置里决定：设为“可以参与”或“编辑者”的人可以发帖，“仅查看”的人只能浏览。</p>' +
+      '<h3>🔤 UBB 代码</h3><div class="tblwrap"><table class="tbl"><tr class="sub"><td>你输入</td><td>显示效果</td></tr>' + ex.map(function (x, i) { return '<tr class="' + (i % 2 ? 'row2' : 'row1') + '"><td><code>' + esc(x) + '</code></td><td>' + ubb(x) + '</td></tr>'; }).join('') + '</table></div>' +
+      '<h3>⭐ 会员等级</h3><p>新手上路（0 帖）→ 初级会员（5）→ 中级会员（30）→ 高级会员（100）→ 资深会员（300）→ 论坛元老（1000）</p>' +
+      '<h3>📌 楼层称呼</h3><p>1 楼 = 楼主，2 楼 = 沙发，3 楼 = 板凳，4 楼 = 地板。抢沙发要趁早！</p></div>');
+    return { html: h, crumbs: ['帮助'] };
+  };
+
+  VIEWS.my = function () {
+    if (!S.myId || !registered()) return { html: needLogin() || '', crumbs: ['控制面板'] };
+    var m = member(S.myId);
+    var h = box('⚙️ 控制面板 — 修改个人资料', '<table class="form"><tr><td class="lbl">论坛昵称：</td><td><input id="my-nick" maxlength="16" value="' + esc(m.nick) + '"></td></tr>' +
+      '<tr><td class="lbl">头像：</td><td class="avatars">' + AVATARS.map(function (a, i) { return '<label><input type="radio" name="my-av" id="my-av-' + i + '" value="' + a + '"' + (avatarOf(S.myId) === a ? ' checked' : '') + '>' + a + '</label>'; }).join('') + '</td></tr>' +
+      '<tr><td class="lbl">来自：</td><td><input id="my-loc" maxlength="30" value="' + esc(str(m.loc, 30)) + '"></td></tr>' +
+      '<tr><td class="lbl">个性签名：</td><td><textarea id="my-sig" rows="4" maxlength="300">' + esc(str(m.sig, 300)) + '</textarea><br><span class="muted small">最多 300 字，支持 UBB 代码</span></td></tr>' +
+      '<tr><td></td><td><button data-act="save-profile"' + (mayWrite() ? '' : ' disabled') + '>保存资料</button></td></tr></table>');
+    if (S.isAdmin && mayWrite()) {
+      h += box('👑 站务管理 — 论坛公告', '<div class="actions"><input id="adm-ann" maxlength="300" style="flex:1;min-width:0" value="' + esc(str(S.config.announcement, 300)) + '"><button data-act="save-ann">更新公告</button></div>');
+      h += box('👑 站务管理 — 版块', '<table class="form">' + boards().map(function (b, i) {
+        return '<tr><td>' + esc(b.icon || '📁') + ' <b>' + esc(b.name) + '</b> <span class="muted">[' + esc(b.cat) + ']</span></td><td style="text-align:right;white-space:nowrap">' +
+          (i > 0 ? '<button data-act="board-up" data-bid="' + b.id + '">上移</button>' : '') + '<button data-act="board-del" data-bid="' + b.id + '">删除</button></td></tr>';
+      }).join('') + '</table><div class="actions"><b>新增版块：</b>分区 <input id="nb-cat" maxlength="20" size="10" value="综合讨论区"> 图标 <input id="nb-icon" maxlength="4" size="3" value="📁"> 名称 <input id="nb-name" maxlength="20" size="12"> 简介 <input id="nb-desc" maxlength="80" size="24"><button data-act="board-add">添加</button></div>' +
+        '<p class="muted small">删除版块后，里面的帖子不会被删掉，只是不再显示。</p>');
+    }
+    return { html: h, crumbs: ['控制面板'] };
+  };
+
+  function notFound(what) { return { html: box('提示信息', '<p class="msg">对不起，您访问的' + what + '不存在或已被删除。<br><a href="#home">[ 返回首页 ]</a></p>') }; }
+
+  // ---------- actions ----------
+  function val(id) { var el = document.getElementById(id); return el ? el.value : ''; }
+  function checkedVal(name) { var el = document.querySelector('input[name="' + name + '"]:checked'); return el ? el.value : ''; }
+  var NICK_RE = /^[㐀-鿿A-Za-z0-9_]{2,16}$/;
+  function nickTaken(nick) {
+    var n = nick.toLowerCase();
+    return Object.keys(S.members).some(function (u) { return u !== S.myId && String(S.members[u].nick || '').toLowerCase() === n; });
+  }
+  var lastPost = 0;
+  function tooFast() { if (Date.now() - lastPost < 8000) { flash('您发帖太快了，请喝杯茶休息几秒钟再来～', true); return true; } return false; }
+
+  function arm(btn, label) {
+    if (btn.getAttribute('data-armed') === '1') return true;
+    btn.setAttribute('data-armed', '1'); btn.classList.add('armed');
+    var old = btn.textContent; btn.textContent = label;
+    setTimeout(function () { if (btn.isConnected) { btn.setAttribute('data-armed', '0'); btn.classList.remove('armed'); btn.textContent = old; } }, 4000);
+    return false;
+  }
+
+  var ACT = {};
+  ACT.register = function () {
+    var nick = val('reg-nick').trim();
+    if (!NICK_RE.test(nick)) return flash('昵称需为 2～16 个字，只能包含中文、字母、数字和下划线。', true);
+    if (nickTaken(nick)) return flash('这个昵称已经被别人用了，换一个吧。', true);
+    if (!document.getElementById('reg-agree').checked) return flash('请先勾选同意论坛规则。', true);
+    var av = checkedVal('reg-av');
+    writeMember(S.myId, function (d) { d.nick = nick; d.avatar = AVATARS.indexOf(av) >= 0 ? av : '🙂'; d.loc = val('reg-loc').trim().slice(0, 30); d.sig = d.sig || ''; d.joined = d.joined || Date.now(); d.threads = d.threads || {}; d.replies = d.replies || {}; })
+      .then(function () { flash('注册成功！欢迎加入千禧论坛，记得去“新人报到”打个招呼哦～'); go('home'); claimOwner(); }, function () {});
+  };
+  ACT['post-thread'] = function () {
+    var b = val('new-board'), title = val('new-title').trim(), body = val('new-body').trim();
+    if (!board(b)) return flash('请选择一个版块。', true);
+    if (title.length < 2) return flash('标题至少要 2 个字。', true);
+    if (body.length < 2) return flash('内容太短啦，至少写 2 个字。', true);
+    if (tooFast()) return;
+    var tid = rid();
+    writeMember(S.myId, function (d) { d.threads = d.threads || {}; d.threads[tid] = { b: b, t: title.slice(0, 80), body: body.slice(0, 10000), c: Date.now() }; })
+      .then(function () { lastPost = Date.now(); S.draft = {}; flash('发表成功！'); go('thread-' + tid); }, function () {});
+  };
+  ACT.reply = function (btn) {
+    var tid = btn.getAttribute('data-tid'), body = val('reply-body').trim();
+    if (body.length < 2) return flash('回复内容太短啦，灌水也要有诚意哦～', true);
+    if (tooFast()) return;
+    var t = M.threads[tid];
+    if (!t || (t.locked && !S.isAdmin)) return flash('这个主题已经被锁定或删除了。', true);
+    var pid = rid();
+    btn.disabled = true;
+    writeMember(S.myId, function (d) { d.replies = d.replies || {}; d.replies[pid] = { tid: tid, body: body.slice(0, 10000), c: Date.now() }; })
+      .then(function () { lastPost = Date.now(); S.draft = {}; var ta = document.getElementById('reply-body'); if (ta) ta.value = ''; flash('回复成功！'); go('thread-' + tid + '-last'); }, function () { btn.disabled = false; });
+  };
+  ACT.quote = function (btn) {
+    var pid = btn.getAttribute('data-pid'), found = null;
+    Object.keys(M.threads).some(function (k) { var t = M.threads[k]; if (t.id === pid) { found = { uid: t.uid, body: t.body }; return true; } return t.replies.some(function (r) { if (r.id === pid) { found = r; return true; } return false; }); });
+    var ta = document.getElementById('reply-body');
+    if (!found || !ta) return;
+    var s = found.body.replace(/\[quote(?:=[^\]]*)?\][\s\S]*?\[\/quote\]/gi, '').trim();
+    ta.value = '[quote=' + nameOf(found.uid) + ']' + clip(s, 300) + '[/quote]\n' + ta.value;
+    ta.focus(); ta.scrollIntoView({ block: 'center' });
+  };
+  ACT['jump-reply'] = function () { var ta = document.getElementById('reply-body'); if (ta) { ta.focus(); ta.scrollIntoView({ block: 'center' }); } };
+  ACT.edit = function (btn) { S.editing = btn.getAttribute('data-pid'); paint(true); var ta = document.getElementById('edit-body'); if (ta) ta.focus(); };
+  ACT['cancel-edit'] = function () { S.editing = null; paint(true); };
+  ACT['save-edit'] = function (btn) {
+    var pid = btn.getAttribute('data-pid'), uid = btn.getAttribute('data-uid'), first = btn.getAttribute('data-first') === '1';
+    var body = val('edit-body').trim(), title = first ? val('edit-title').trim() : '';
+    if (body.length < 2) return flash('内容太短啦。', true);
+    if (first && title.length < 2) return flash('标题至少要 2 个字。', true);
+    writeMember(uid, function (d) {
+      var x = first ? (d.threads || {})[pid] : (d.replies || {})[pid];
+      if (!x) return;
+      x.body = body.slice(0, 10000); x.e = Date.now(); if (first) x.t = title.slice(0, 80);
+    }).then(function () { S.editing = null; flash('修改已保存。'); render(true); }, function () {});
+  };
+  ACT['del-reply'] = function (btn) {
+    if (!arm(btn, '[确定删除？再点一次]')) return;
+    var pid = btn.getAttribute('data-pid'), uid = btn.getAttribute('data-uid');
+    writeMember(uid, function (d) { if (d.replies) delete d.replies[pid]; }).then(function () { flash('回复已删除。'); }, function () {});
+  };
+  ACT['del-thread'] = function (btn) {
+    if (!arm(btn, '确定删除整个主题？再点一次')) return;
+    var t = M.threads[btn.getAttribute('data-tid')];
+    if (!t) return;
+    writeMember(t.uid, function (d) { if (d.threads) delete d.threads[t.id]; }).then(function () { flash('主题已删除。'); go('board-' + t.board); }, function () {});
+  };
+  ACT.pin = function (btn) { var tid = btn.getAttribute('data-tid'), p = {}; p[tid] = !flag('pinned', tid); writeConfig({ pinned: p }); };
+  ACT.lock = function (btn) { var tid = btn.getAttribute('data-tid'), p = {}; p[tid] = !flag('locked', tid); writeConfig({ locked: p }); };
+  ACT['save-profile'] = function () {
+    var nick = val('my-nick').trim();
+    if (!NICK_RE.test(nick)) return flash('昵称需为 2～16 个字，只能包含中文、字母、数字和下划线。', true);
+    if (nickTaken(nick)) return flash('这个昵称已经被别人用了，换一个吧。', true);
+    var av = checkedVal('my-av');
+    writeMember(S.myId, function (d) { d.nick = nick; if (AVATARS.indexOf(av) >= 0) d.avatar = av; d.loc = val('my-loc').trim().slice(0, 30); d.sig = val('my-sig').trim().slice(0, 300); })
+      .then(function () { flash('个人资料已保存。'); render(true); }, function () {});
+  };
+  ACT['save-ann'] = function () { writeConfig({ announcement: val('adm-ann').trim().slice(0, 300) }).then(function () { flash('公告已更新。'); }, function () {}); };
+  ACT['board-add'] = function () {
+    var name = val('nb-name').trim(), cat = val('nb-cat').trim();
+    if (!name || !cat) return flash('版块名称和分区都要填。', true);
+    var list = boards().map(function (b) { return { id: b.id, cat: b.cat, name: b.name, desc: b.desc || '', icon: b.icon || '📁' }; });
+    list.push({ id: rid().slice(-8), cat: cat.slice(0, 20), name: name.slice(0, 20), desc: val('nb-desc').trim().slice(0, 80), icon: val('nb-icon').trim().slice(0, 4) || '📁' });
+    writeConfig({ boards: list }).then(function () { flash('版块已添加。'); }, function () {});
+  };
+  ACT['board-del'] = function (btn) {
+    if (!arm(btn, '再点一次确认')) return;
+    var id = btn.getAttribute('data-bid');
+    writeConfig({ boards: boards().filter(function (b) { return b.id !== id; }) }).then(function () { flash('版块已删除。'); }, function () {});
+  };
+  ACT['board-up'] = function (btn) {
+    var id = btn.getAttribute('data-bid'), list = boards().slice(), i = list.findIndex(function (b) { return b.id === id; });
+    if (i > 0) { var t = list[i - 1]; list[i - 1] = list[i]; list[i] = t; writeConfig({ boards: list }); }
+  };
+  ACT.search = function () { S.searchQ = val('search-q'); paint(true); var el = document.getElementById('search-q'); if (el) el.focus(); };
+
+  function claimOwner() {
+    if (S.isOwner && S.myId && S.config && S.config.ownerId !== S.myId && mayWrite()) writeConfig({ ownerId: S.myId }).catch(function () {});
+  }
+
+  // ---------- UBB toolbar ----------
+  function wrap(ta, open, close) {
+    var s = ta.selectionStart, e = ta.selectionEnd, v = ta.value, sel = v.slice(s, e);
+    ta.value = v.slice(0, s) + open + sel + close + v.slice(e);
+    ta.focus(); ta.selectionStart = s + open.length; ta.selectionEnd = s + open.length + sel.length;
+  }
+
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('[data-act]');
+    if (a) { e.preventDefault(); if (ACT[a.getAttribute('data-act')]) ACT[a.getAttribute('data-act')](a); return; }
+    var bar = e.target.closest('.ubb-bar');
+    if (!bar) return;
+    var ta = document.getElementById(bar.getAttribute('data-for'));
+    if (!ta) return;
+    var sm = e.target.closest('[data-smile]');
+    if (sm) { e.preventDefault(); wrap(ta, ' ' + sm.getAttribute('data-smile') + ' ', ''); return; }
+    var b = e.target.closest('button[data-tag]');
+    if (!b) return;
+    var tag = b.getAttribute('data-tag');
+    if (tag === 'url') wrap(ta, '[url=https://]', '[/url]');
+    else wrap(ta, '[' + tag + ']', '[/' + tag + ']');
+  });
+  document.addEventListener('change', function (e) {
+    var sel = e.target.closest('select[data-tagsel]');
+    if (!sel || !sel.value) return;
+    var ta = document.getElementById(sel.closest('.ubb-bar').getAttribute('data-for'));
+    var tag = sel.getAttribute('data-tagsel');
+    wrap(ta, '[' + tag + '=' + sel.value + ']', '[/' + tag + ']');
+    sel.value = '';
+  });
+  document.addEventListener('input', function (e) { if (e.target.tagName === 'TEXTAREA' && e.target.id && e.target.id !== 'edit-body') S.draft[location.hash + '|' + e.target.id] = e.target.value; });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && e.target.id === 'reply-body') { var b = document.querySelector('[data-act="reply"]'); if (b) b.click(); }
+    if (e.key === 'Enter' && e.target.id === 'search-q') ACT.search();
+  });
+  window.addEventListener('hashchange', function () { S.editing = null; if (Date.now() - (S.flashAt || 0) > 1500) { S.flash = ''; paintFlash(); } render(true); window.scrollTo(0, 0); });
+
+  function tick() { var d = new Date(); document.getElementById('clock').textContent = fmt(+d); }
+  tick(); setInterval(tick, 30000);
+
+  // ---------- boot ----------
+  function start() {
+    if (!window.claude || !window.claude.use) { S.unavailable = '请在 claude.ai 中打开这个页面，才能浏览和发帖。'; render(); return; }
+    Promise.all([window.claude.use('db'), window.claude.use('user'), window.claude.use('room')]).then(function (caps) {
+      S.db = caps[0]; S.user = caps[1]; S.room = caps[2];
+      if (!S.db) { S.unavailable = '论坛数据暂时读不到。请确认已经登录 claude.ai，然后刷新页面。'; render(); return; }
+      var timer = setTimeout(function () { S.timedOut = true; render(); }, 10000);
+      function loadedCheck(snap) { if (S.cfgLoaded && S.memLoaded && snap && !snap.metadata.fromCache) { clearTimeout(timer); S.timedOut = false; } }
+      S.db.doc('site/config').onSnapshot(function (snap) {
+        S.config = snap.exists ? snap.data() : { boards: [] };
+        S.cfgLoaded = true; loadedCheck(snap); derive(); render(); claimOwner();
+      }, function () { clearTimeout(timer); S.timedOut = true; render(); });
+      S.db.collection('members').onSnapshot(function (snap) {
+        var mm = {};
+        snap.docs.forEach(function (d) { var v = d.data(); if (isObj(v)) mm[d.id] = v; });
+        S.members = mm; S.memLoaded = true; loadedCheck(snap); derive(); render();
+      }, function () { clearTimeout(timer); S.timedOut = true; render(); });
+      if (S.user) {
+        Promise.all([S.user.id(), S.user.isOwner(), S.user.canEdit(), S.user.can('data.write')]).then(function (v) {
+          S.myId = v[0]; S.isOwner = v[1]; S.isAdmin = v[1] || v[2]; S.canWrite = v[3];
+          render(); claimOwner();
+        });
+      }
+      if (S.room) {
+        S.room.presence({ here: 1 }).catch(function () {});
+        S.room.onPeers(function (ch) { S.peers = ch.peers.slice(); render(); }, function () {});
+      }
+      render();
+    });
+  }
+  render();
+  start();
+})();
+</script>
